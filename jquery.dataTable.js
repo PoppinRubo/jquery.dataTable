@@ -1,5 +1,8 @@
-/*使用之前记得要引入JQ库*/
+////////////////////////////
+      /* 版本号0.8 */
+////////////////////////////
 
+/*使用之前记得要引入JQ库*/
 /*选择行对象 对于复选框 外部可访问*/
 var CheckData = {};
 /*url返回的数据用于取出行数据*/
@@ -10,7 +13,7 @@ var GetJSONData = {};
     var DebugMsg = false;
     /*记录Table设置*/
     var TableSet = {};
-    d.fn.DataTable = function (Obj) {/*使用table绑定 注意要用使用ID*/
+    d.fn.dataTable = function (Obj) {/*使用table绑定 注意要用使用ID*/
         DebugMsg = false;
         /*d是传进来的元素 d(this)就是这个table*/
         var t = d(this);
@@ -169,7 +172,7 @@ var GetJSONData = {};
                             var ColumnContent = json[r][columns[c].ColumnName];
 
                             var ColumnTitle = ColumnContent;
-                            /*列功能 打开编辑 删除*/
+                            /*列功能 打开编辑 删除 自定义*/
                             var facility = Object.columns[c]["type"];
                             if (!empty(facility)) {
                                 if (facility == "edit") {
@@ -179,6 +182,15 @@ var GetJSONData = {};
                                 if (facility == "del") {
                                     ColumnContent = "<span class='" + TableID + "_dt_del Button'>删除</span>";
                                     ColumnTitle = "删除";
+                                }
+                                if (facility == "custom") {/*自定义*/
+                                    var customTag = Object.columns[c]["customTag"];
+                                    if (empty(customTag)) {
+                                        debug("自定义按钮为设置显示标签");
+                                        return false;
+                                    }
+                                    ColumnContent = "<span class='" + TableID + "_dt_custom Button'>" + customTag + "</span>";
+                                    ColumnTitle = customTag;
                                 }
 
                             }
@@ -331,6 +343,7 @@ var GetJSONData = {};
                             endPage.css({"cursor": "not-allowed"});
                         }
                     }
+
                     pagControl(page);
                     /*页码部分 结束*/
                     if (!empty(check)) {/*检查是否开启复选框 完成对应代码*/
@@ -390,6 +403,11 @@ var GetJSONData = {};
                         var data = GetClickRowData(this, 0, TableID);
                         /*获取绑定 参数数据 点击行*/
                         Object.delClick(data);
+                    });
+                    $("." + TableID + "_dt_custom").click(function () {/*删除点击方法*/
+                        var data = GetClickRowData(this, 0, TableID);
+                        /*获取绑定 参数数据 点击行*/
+                        Object.customClick(data);
                     });
                     /*定义setTimeout执行方法 解决单击双击冲突*/
                     var TimeFn = null;
