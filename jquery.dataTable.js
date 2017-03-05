@@ -14,7 +14,6 @@ var GetJSONData = {};
         DebugMsg = false;
         /*d是传进来的元素 d(this)就是这个table*/
         var t = d(this);
-        t.html("");
         var tid = t[0].id;
         /*页码*/
         var page = 1;
@@ -140,7 +139,7 @@ var GetJSONData = {};
                 var align = Object.align;
                 if (!empty(align)) {
                     Table.find("." + TableID + "_td").css("text-align", align);
-                    Table.find("."+TableID + "_td_head").css("text-align", align);
+                    Table.find("." + TableID + "_td_head").css("text-align", align);
                 }
 
             }
@@ -153,29 +152,14 @@ var GetJSONData = {};
                 TableStyle();
                 return false;
             }
-            /*加载效果开始*/
-            var loading = '<div id="dt_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: 100%;height: 100%;' +
-                'text-align: center;font-size: 14px;font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;">' +
-                '<span style="margin-top: 22%;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:#232323;">3</span></span>' +
-                '<span style="margin-top: 25%;position: absolute;">加载中...</span></div>';
-            $("#" + TableID).append(loading);
-            var dt_animation = $(".dt_animation");
-            var startAnimation = function () {
-                dt_animation.animate({left: 10}, "slow");
-                dt_animation.animate({left: 30}, "slow");
-                dt_animation.animate({left: 10}, "slow");
-                dt_animation.animate({left: 0}, "slow", startAnimation);
-            };
-            /*启动动画*/
-            startAnimation();
-            /*加载效果结束*/
-
+            Animation(TableID, 'start');
+            /*开始加载动画*/
             $.getJSON(url, {page: page, pageCapacity: pageCapacity}, function (json) {/*根据URL拉取数据*/
-                startAnimation = null;
-                $("#dt_loading").remove();//移除动画
+                Animation(TableID, 'stop');
+                /*结束加载动画*/
                 var total = json.total;
                 json = json.rows;
-                if (json!=null) {
+                if (json != null) {
                     GetJSONData[TableID] = json;
                     for (var r = 0; r < json.length; r++) {/*遍历行*/
                         /*table组装行*/
@@ -209,22 +193,19 @@ var GetJSONData = {};
                     }
                     /*页码部分 开始*/
                     /*页码工具 创建*/
-                    var totalPage=Math.ceil(total/pageCapacity);
-                    /*第一页隐藏上一页*/
-                    var PageControl=page==1?"":"<span class='Button " + TableID + "_aPage' title='上一页'>上一页</span>";
-                    /*等于最大页隐藏 下一页*/
-                    var nextPageControl=page==totalPage||totalPage==1?"":"<span class='Button " + TableID + "_nextPage' title='下一页'>下一页</span>";
-                    var pager = "<div class='pager' style='width: 100%;position: absolute;height: 35px;'>" +
+                    var totalPage = Math.ceil(total / pageCapacity);
+                    var pager = "<div class='tablePager' style='width: 100%;position: absolute;height: 35px;'>" +
                         "<span style='float: left;margin: 10px;'>显示条数:</span>" +
                         "<select class='Button " + TableID + "_select'>" +
                         "<option>10</option><option>20</option><option>30</option><option>40</option><option>50</option></select>" +
                         "<span class='Button " + TableID + "_firstPage' title='跳到第一页'>首页</span>" +
-                        PageControl+nextPageControl+
+                        "<span class='Button " + TableID + "_aPage' title='上一页'>上一页</span>" +
+                        "<span class='Button " + TableID + "_nextPage' title='下一页'>下一页</span>" +
                         "<span class='Button " + TableID + "_endPage' title='跳到最后一页'>尾页</span>" +
                         "<span class='" + TableID + "_PageInput' style='float: left;'>" +
                         "<input class='" + TableID + "_inp' maxlength='5' placeholder='跳页' style='width: 50px;margin: 6px;'>" +
                         "</span><span class='Button " + TableID + "_ok' title='跳到目标页'>确定</span>" +
-                        "<span style='float: left;margin: 10px;'>当前在第"+page+"页,总页" +totalPage+ "页</span></div>";
+                        "<span class='" + TableID + "_page_tip' style='float: left;margin: 10px;'>当前在第" + page + "页,总页" + totalPage + "页</span></div>";
                     Table.append(pager);
                     /*table样式*/
                     TableStyle();
@@ -240,12 +221,12 @@ var GetJSONData = {};
                         if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) <= 0) $(this).val("");
                     });
                     /*工具样式*/
-                    Table.find(".pager").find(".Button").css({
+                    Table.find(".tablePager").find(".Button").css({
                         "float": "left",
                         "padding": "5px",
                         "margin": "5px"
                     });
-                    var CapacitySelect = Table.find(".pager").find("." + TableID + "_select");
+                    var CapacitySelect = Table.find(".tablePager").find("." + TableID + "_select");
                     CapacitySelect.css({
                         "padding": "1px"
                     });
@@ -257,54 +238,63 @@ var GetJSONData = {};
                     });
                     /*页码容量*/
                     /*显示自定义显示容量*/
-                    var op=Object.pageCapacity;
-                    if(op!=10&&op!=20&&op!=30&&op!=40&&op!=50){
-                        CapacitySelect.prepend("<option>"+op+"</option>");
+                    var op = Object.pageCapacity;
+                    if (op != 10 && op != 20 && op != 30 && op != 40 && op != 50) {
+                        CapacitySelect.prepend("<option>" + op + "</option>");
                     }
                     CapacitySelect.val(Object.pageCapacity);
                     CapacitySelect.change(function () {
                         ClearTable(Table);
                         /*容量更新*/
                         Object.pageCapacity = CapacitySelect.val();
-                        CreateTable(Object, Table, TableID,page);
+                        CreateTable(Object, Table, TableID, page = 1);
                     });
                     /*首页*/
-                    var firstPage = Table.find(".pager").find("." + TableID + "_firstPage");
+                    var firstPage = Table.find(".tablePager").find("." + TableID + "_firstPage");
                     firstPage.click(function () {
-                        page=1;
-                        ClearTable(Table);
-                        CreateTable(Object, Table, TableID, page);
+                        if (page == 1) {
+                            return false;
+                        }
+                        page = 1;
+                        pagControl(page);
+                        UpdateData(Object, Table, TableID, page);
                     });
                     /*上一页*/
-                    var aPage = Table.find(".pager").find("." + TableID + "_aPage");
+                    var aPage = Table.find(".tablePager").find("." + TableID + "_aPage");
                     aPage.click(function () {
-                        page--;
-                        if(page==1){
-                            aPage.hide();
+                        if (page == 1) {
+                            return false;
                         }
-                        ClearTable(Table);
-                        CreateTable(Object, Table, TableID, page);
+                        page--;
+                        pagControl(page);
+                        UpdateData(Object, Table, TableID, page);
                     });
                     /*下一页*/
-                    var nextPage = Table.find(".pager").find("." + TableID + "_nextPage");
+                    var nextPage = Table.find(".tablePager").find("." + TableID + "_nextPage");
                     nextPage.click(function () {
+                        if (page == totalPage) {
+                            return false;
+                        }
                         page++;
-                        ClearTable(Table);
-                        CreateTable(Object, Table, TableID, page);
+                        pagControl(page);
+                        UpdateData(Object, Table, TableID, page);
                     });
                     /*尾页*/
-                    var endPage = Table.find(".pager").find("." + TableID + "_endPage");
+                    var endPage = Table.find(".tablePager").find("." + TableID + "_endPage");
                     endPage.click(function () {
-                        page=totalPage;
-                        ClearTable(Table);
-                        CreateTable(Object, Table, TableID, page);
+                        if (page == totalPage) {
+                            return false;
+                        }
+                        page = totalPage;
+                        pagControl(page);
+                        UpdateData(Object, Table, TableID, page);
                     });
                     /*跳页*/
-                    var PageOk = Table.find(".pager").find("." + TableID + "_ok");
+                    var PageOk = Table.find(".tablePager").find("." + TableID + "_ok");
                     PageOk.click(function () {
                         JumpPage();
                     });
-                    inp.keydown(function(e) {
+                    inp.keydown(function (e) {
                         if (e.keyCode == 13) {
                             JumpPage();
                         }
@@ -312,15 +302,36 @@ var GetJSONData = {};
                     /**
                      * @return {boolean}
                      */
-                    function JumpPage(){
-                        var p=inp.val();
-                        if(p<1||p>totalPage){
+                    function JumpPage() {
+                        var p = inp.val();
+                        if (p < 1 || p > totalPage) {
                             return false;
                         }
-                        page=p;
-                        ClearTable(Table);
-                        CreateTable(Object, Table, TableID, page);
+                        page = p;
+                        pagControl(page);
+                        UpdateData(Object, Table, TableID, page);
                     }
+
+                    /*页码按钮控制-禁用-启用*/
+                    function pagControl(p) {
+                        if (p > 1) {
+                            aPage.css({"cursor": "pointer"});
+                            firstPage.css({"cursor": "pointer"});
+                        }
+                        if (p == 1) {
+                            aPage.css({"cursor": "not-allowed"});
+                            firstPage.css({"cursor": "not-allowed"});
+                        }
+                        if (p < totalPage) {
+                            nextPage.css({"cursor": "pointer"});
+                            endPage.css({"cursor": "pointer"});
+                        }
+                        if (p == totalPage) {
+                            nextPage.css({"cursor": "not-allowed"});
+                            endPage.css({"cursor": "not-allowed"});
+                        }
+                    }
+
                     /*页码部分 结束*/
                     if (!empty(check)) {/*检查是否开启复选框 完成对应代码*/
                         /*复选框控制 开始*/
@@ -421,7 +432,7 @@ var GetJSONData = {};
             });
         }
 
-        CreateTable(Obj, t, tid,page);
+        CreateTable(Obj, t, tid, page);
     };
     /**下面是辅助方法**/
     function empty(b) {/*检查是否设置 不存在返回true 为空为true*/
@@ -453,9 +464,87 @@ var GetJSONData = {};
         return RowData;
     }
 
-    /*表格清理重建*/
+    /*加载动画*/
+    /**
+     * @return {boolean}
+     */
+    function Animation(TableID, o) {
+        if (!empty(TableSet[TableID].Object.loading)) {
+            if (!TableSet[TableID].Object.loading) {
+                return false;
+            }
+        }
+        var table = $('#' + TableID);
+        var top = table.height() / 2;
+        var width = table.width();
+        var height = table.height();
+        var startAnimation = null;
+        if (o == "start") {
+            /*加载效果开始*/
+            var loading = '<div id="' + TableID + '_dt_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: ' + width + 'px;height: ' + height + 'px;' +
+                'text-align: center;font-size: 14px;font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;">' +
+                '<span style="margin-top: ' + top + 'px;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:#232323;">3</span></span>' +
+                '<span style="margin-top: ' + eval(top + 20) + 'px;position: absolute;">加载中...</span></div>';
+            table.append(loading);
+            var dt_animation = $(".dt_animation");
+            startAnimation = function () {
+                dt_animation.animate({left: 10}, "slow");
+                dt_animation.animate({left: 30}, "slow");
+                dt_animation.animate({left: 10}, "slow");
+                dt_animation.animate({left: 0}, "slow", startAnimation);
+            };
+            /*启动动画*/
+            startAnimation();
+            /*加载效果结束*/
+        }
+        if (o == "stop") {
+            startAnimation = null;
+            $("#" + TableID + "_dt_loading").remove();//移除动画
+        }
+    }
+
     function ClearTable(t) {
         t.html("");
+    }
+
+    /*表格数据更新-页码操作 避免页码操作产生闪烁情况 则不使用清理重建*/
+    function UpdateData(Object, Table, TableID, page) {
+        Animation(TableID, 'start');
+        var columns = Object.columns;
+        var pageCapacity = Object.pageCapacity;
+        $.getJSON(Object.url, {page: page, pageCapacity: pageCapacity}, function (json) {/*根据URL拉取数据*/
+            var total = json.total;
+            Animation(TableID, 'stop');
+            json = json.rows;
+            if (json != null) {
+                var jsonCount = json.length;
+                GetJSONData[TableID] = json;
+                for (var r = 0; r < jsonCount; r++) {/*遍历行*/
+                    /*table组装行*/
+                    for (var c = 0; c < columns.length; c++) {/*遍历列*/
+                        /*行组装列*/
+                        var ColumnContent = json[r][columns[c].ColumnName];
+                        /*生成一行一列 data-row= 为自定义标签用于识别行 */
+                        var table_td = Table.find("tr").eq(r + 1).find("." + TableID + "_td").eq(c);
+                        table_td.html(ColumnContent);
+                        table_td.attr("title", ColumnContent);
+                    }
+                }
+                var totalPage = Math.ceil(total / pageCapacity);
+                $("." + TableID + "_page_tip").html("当前在第" + page + "页,总页" + totalPage + "页");
+                /*数据不够表格行时，多余行隐藏*/
+                if (jsonCount < pageCapacity) {
+                    var poor = pageCapacity - jsonCount;
+                    for (var i = 1; i <= poor; i++) {
+                        Table.find("tr").eq(jsonCount + i).hide();
+                    }
+                } else {
+                    Table.find("tr").show();
+                }
+            } else {
+                debug("返回数据为空");
+            }
+        });
     }
 
     /*获取行号*/
