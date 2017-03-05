@@ -14,7 +14,7 @@ var GetJSONData = {};
         /*d是传进来的元素 d(this)就是这个table*/
         var t = d(this);
         t.html("");
-        tid = t[0].id;
+        var tid = t[0].id;
         /*由于数据请求为异步执行,会造成多个表格绑定时发生不对应现象,方法事件会错乱，故采用CreateTable方法用调用方式传参*/
         /**
          * @return {boolean|function|[]|{}}
@@ -36,7 +36,7 @@ var GetJSONData = {};
             }
             /*生成表头*/
             /*插入表头行*/
-            Table.append("<tr class='"+TableID+"_dt_head'></tr>");
+            Table.append("<tr class='" + TableID + "_dt_head'></tr>");
             for (var h = 0; h < columns.length; h++) {
                 /*列宽控制*/
                 var w = Object.columns[h]["width"];
@@ -51,7 +51,7 @@ var GetJSONData = {};
             var check = Object.check;
             if (empty(check)) {/*检查是否开启复选框 生成表头*/
                 if (check) {
-                    Table.find("tr").eq(0).prepend("<td title='全选' style='width:25px'><input class='"+TableID+"_dt_check_all' type='checkbox'></td>");
+                    Table.find("tr").eq(0).prepend("<td title='全选' style='width:25px'><input class='" + TableID + "_dt_check_all' type='checkbox'></td>");
                 }
             }
             /*加载效果开始*/
@@ -74,6 +74,7 @@ var GetJSONData = {};
                 startAnimation = null;
                 $("#dt_loading").remove();//移除动画
 
+
                 if (json.length) {
                     GetJSONData[TableID] = json;
                     for (var r = 0; r < json.length; r++) {/*遍历行*/
@@ -84,6 +85,7 @@ var GetJSONData = {};
                             var facility = Object.columns[c]["type"];
                             /*列功能*/
                             var ColumnContent = null;
+                            var ColumnTitle = null;
                             if (!empty(facility)) {/*检查是否绑定功能*/
                                 ColumnContent = json[r][columns[c].ColumnName];
                                 ColumnTitle = ColumnContent;
@@ -132,7 +134,7 @@ var GetJSONData = {};
                     Table.find("tr").eq(0).find("td").eq(0).css({
                         "cursor": "pointer",
                     });
-                    Table.find("." + TableID + "_dt_checkbox,."+TableID+"_dt_check_all").css({
+                    Table.find("." + TableID + "_dt_checkbox,." + TableID + "_dt_check_all").css({
                         "width": "15px",
                         "height": "15px",
                         "margin": "0 auto",
@@ -155,10 +157,13 @@ var GetJSONData = {};
                     });
                     var ButtonStyle = Object.ButtonStyle;
                     if (empty(ButtonStyle)) {
-                        Table.find("td span").css({"background": ButtonStyle.backgroundColor,"color":ButtonStyle.fontColor});
+                        Table.find("td span").css({
+                            "background": ButtonStyle.backgroundColor,
+                            "color": ButtonStyle.fontColor
+                        });
                     }
                     Table.find("tr").hover(function () {
-                        if (this.className != "dt_head") {
+                        if (this.className != TableID + "_dt_head") {
                             this.style.backgroundColor = "#d8d8d8";
                         }
                     }, function () {
@@ -176,28 +181,32 @@ var GetJSONData = {};
                         /*复选框控制 开始*/
                         /*行选*/
                         Table.find("." + TableID + "_td").click(function (ev) {
-                            if (ev.target === this && this.parentNode.className != TableID+"_dt_head") {/*不启用表头行选*/
+                            if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {/*不启用表头行选*/
                                 this.parentNode.firstChild.firstChild.click();
                             }
-                            if (ev.target === this && this.firstChild.className == TableID+"_dt_check_all") {/*选所在td*/
+                            if (ev.target === this && this.firstChild.className == TableID + "_dt_check_all") {/*选所在td*/
                                 $(".dt_check_all").click();
                             }
                         });
-                        /*点选*/
-                        var Check=[];
+                        /* 复选框 选择*/
                         var dt_checkbox = $("." + TableID + "_dt_checkbox");
                         dt_checkbox.click(function () {
+                            var C = [];
+                            var data = null;
+                            var r=0;
                             /*点选加入到数组*/
-                            var data = GetClickRowData(this, 1, TableID);
-                            if (data != null) {
-                                Check.push(data);
-                                CheckData[TableID]=Check;
+                            for (var i = 0; i < dt_checkbox.length; i++) {
+                                r=GerRowData(dt_checkbox.eq(i)[0].parentNode.nextSibling);
+                                if (dt_checkbox.eq(i)[0].checked) {
+                                    data=GetJSONData[TableID][r - 2];
+                                    C.push(data);
+                                }
                             }
-
+                            CheckData[TableID]=C;
                         });
                         /*全选*/
                         var all = 0;
-                        $("."+TableID+"_dt_check_all").click(function () {
+                        $("." + TableID + "_dt_check_all").click(function () {
                             if (all == 0) {
                                 dt_checkbox.click();
                                 dt_checkbox.prop("checked", true);
@@ -235,7 +244,7 @@ var GetJSONData = {};
                         clearTimeout(TimeFn);
                         /*执行延时*/
                         TimeFn = setTimeout(function () {
-                            if (ev.target === t && t.parentNode.className != TableID+"_dt_head") {
+                            if (ev.target === t && t.parentNode.className != TableID + "_dt_head") {
                                 var data = GetClickRowData(t, 2, TableID);
                                 /*获取绑定 参数数据 点击行*/
                                 Object.Click(data);
@@ -251,7 +260,7 @@ var GetJSONData = {};
                         /*取消上次延时未执行的方法*/
                         clearTimeout(TimeFn);
                         /*双击事件的执行代码*/
-                        if (ev.target === this && this.parentNode.className != TableID+"_dt_head") {
+                        if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {
                             var data = GetClickRowData(this, 2, TableID);
                             /*获取绑定 参数数据 点击行*/
                             Object.doubleClick(data);
@@ -273,7 +282,7 @@ var GetJSONData = {};
 
     /*行点击操作*/
     /*c 代表的是点谁 c用来找td t代表是区别操作类型 返回行对象*/
-    /*0 是编辑删除点击处理 1是复选框 2是单击取数据*/
+    /*0 是编辑删除点击处理  2是单击取数据*/
     /**
      * @return {null|[]}
      */
@@ -282,22 +291,6 @@ var GetJSONData = {};
         /*一行的所有列*/
         if (t == 0) {
             row = GerRowData(c.parentNode);
-        }
-        if (t == 1) {
-            row = GerRowData(c.parentNode.nextSibling);
-            /*检查是选择还是取消*/
-            if (!c.checked) {
-                /*如果取消 之前该行存在的元素要移除*/
-                if (empty(CheckData[tid])) {
-                    for (var i=0;i<CheckData[tid].length;i++){
-                        if (CheckData[tid].LineNumber == row) {
-                            CheckData[tid].splice(i, 1);
-                        }
-                    }
-                }
-                return null;
-            }
-
         }
         if (t == 2) {
             row = GerRowData(c);
@@ -314,7 +307,7 @@ var GetJSONData = {};
 
     /*获取行号*/
     /**
-     * @return {int}
+     * @return {string|int}
      */
     function GerRowData(TdNode) {
         var row = TdNode.getAttribute("data-row");
