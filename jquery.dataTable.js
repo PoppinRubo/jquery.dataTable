@@ -1,5 +1,5 @@
 ////////////////////////////
-      /* 版本号0.8 */
+/* 版本号0.9 */
 ////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -17,6 +17,7 @@ var GetJSONData = {};
         DebugMsg = false;
         /*d是传进来的元素 d(this)就是这个table*/
         var t = d(this);
+        ClearTable(t);
         var tid = t[0].id;
         /*页码*/
         var page = 1;
@@ -68,9 +69,8 @@ var GetJSONData = {};
                 /*插入表头列*/
                 Table.find("tr").eq(0).append("<td class='" + TableID + "_td_head' style='width:" + width + ";'>" + columns[h]['title'] + "</td>");
             }
-            var check = Object.check;
-            if (!empty(check)) {/*检查是否开启复选框 生成表头*/
-                if (check) {
+            if (!empty(Object.check)) {/*检查是否开启复选框 生成表头*/
+                if (Object.check) {
                     Table.find("tr").eq(0).prepend("<td class='" + TableID + "_td' title='全选' style='width:25px'><input class='" + TableID + "_dt_check_all' type='checkbox'></td>");
                 }
             }
@@ -173,33 +173,26 @@ var GetJSONData = {};
 
                             var ColumnTitle = ColumnContent;
                             /*列功能 打开编辑 删除 自定义*/
-                            var facility = Object.columns[c]["type"];
+                            var facility = Object.columns[c]["button"];
                             if (!empty(facility)) {
-                                if (facility == "edit") {
-                                    ColumnContent = "<span  class='" + TableID + "_dt_edit Button'>编辑</span>";
-                                    ColumnTitle = "编辑";
+                                if (facility == "") {
+                                    debug("未定义按钮");
+                                    return false;
                                 }
-                                if (facility == "del") {
-                                    ColumnContent = "<span class='" + TableID + "_dt_del Button'>删除</span>";
-                                    ColumnTitle = "删除";
+                                var buttonName = Object.columns[c]["buttonName"];
+                                if (empty(buttonName) || buttonName == "") {
+                                    debug("自定义按钮未设置按钮名");
+                                    return false;
                                 }
-                                if (facility == "custom") {/*自定义*/
-                                    var customTag = Object.columns[c]["customTag"];
-                                    if (empty(customTag)) {
-                                        debug("自定义按钮为设置显示标签");
-                                        return false;
-                                    }
-                                    ColumnContent = "<span class='" + TableID + "_dt_custom Button'>" + customTag + "</span>";
-                                    ColumnTitle = customTag;
-                                }
-
+                                ColumnContent = "<span data-button='" + facility + "' class='" + TableID + "_button_" + facility + " Button'>" + buttonName + "</span>";
+                                ColumnTitle = buttonName;
                             }
                             /*生成一行一列 data-row= 为自定义标签用于识别行 */
                             Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "'  title='" + ColumnTitle + "'>" + ColumnContent + "</td>");
                         }
-                        if (!empty(check)) {/*检查是否开启复选框 绑定行*/
-                            if (check) {
-                                Table.find("tr").eq(r + 1).prepend("<td><input class='" + TableID + "_dt_checkbox' type='checkbox'></td>");
+                        if (!empty(Object.check)) {/*检查是否开启复选框 绑定行*/
+                            if (Object.check) {
+                                Table.find("tr").eq(r + 1).prepend("<td class='" + TableID + "_td_checkbox'><input class='" + TableID + "_dt_checkbox' type='checkbox'></td>");
                             }
                         }
                     }
@@ -269,6 +262,7 @@ var GetJSONData = {};
                         }
                         page = 1;
                         pagControl(page);
+                        ClearChoice(TableID)
                         UpdateData(Object, Table, TableID, page);
                     });
                     /*上一页*/
@@ -289,6 +283,7 @@ var GetJSONData = {};
                         }
                         page++;
                         pagControl(page);
+                        ClearChoice(TableID);
                         UpdateData(Object, Table, TableID, page);
                     });
                     /*尾页*/
@@ -299,6 +294,7 @@ var GetJSONData = {};
                         }
                         page = totalPage;
                         pagControl(page);
+                        ClearChoice(TableID);
                         UpdateData(Object, Table, TableID, page);
                     });
                     /*跳页*/
@@ -321,6 +317,7 @@ var GetJSONData = {};
                         }
                         page = p;
                         pagControl(page);
+                        ClearChoice(TableID);
                         UpdateData(Object, Table, TableID, page);
                     }
 
@@ -343,72 +340,89 @@ var GetJSONData = {};
                             endPage.css({"cursor": "not-allowed"});
                         }
                     }
-
+                    /*复选框恢复方法 先定义空方法*/
+                    var ClearChoice=function (t) {/*如果开启复选功能 则有相应处理 在下面 么么哒*/};
                     pagControl(page);
                     /*页码部分 结束*/
-                    if (!empty(check)) {/*检查是否开启复选框 完成对应代码*/
-                        /*复选框控制 开始*/
-                        /*行选*/
-                        Table.find("." + TableID + "_td").click(function (ev) {
-                            if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {/*不启用表头行选*/
-                                this.parentNode.firstChild.firstChild.click();
-                            }
-                            if (ev.target === this && this.firstChild.className == TableID + "_dt_check_all") {/*选所在td*/
-                                $("." + TableID + "_dt_check_all").click();
-                            }
-                        });
-                        /* 复选框 选择*/
-                        var dt_checkbox = $("." + TableID + "_dt_checkbox");
-                        dt_checkbox.click(function () {
-                            var C = [];
-                            var data = null;
-                            var r = 0;
-                            /*点选加入到数组*/
-                            for (var i = 0; i < dt_checkbox.length; i++) {
-                                r = GerRowData(dt_checkbox.eq(i)[0].parentNode.nextSibling);
-                                if (dt_checkbox.eq(i)[0].checked) {
-                                    data = GetJSONData[TableID][r - 2];
-                                    C.push(data);
+                    if (!empty(Object.check)) {/*检查是否开启复选框 完成对应代码*/
+                        if (Object.check) {
+                            /*复选框控制 开始*/
+                            /*行选*/
+                            Table.find("." + TableID + "_td").click(function (ev) {
+                                if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {/*不启用表头行选*/
+                                    this.parentNode.firstChild.firstChild.click();
                                 }
-                            }
-                            if (C.length < 1) {
-                                C = null;
-                            }
-                            CheckData[TableID] = C;
-                        });
-                        /*全选*/
-                        var all = 0;
-                        $("." + TableID + "_dt_check_all").click(function () {
-                            if (all == 0) {
-                                dt_checkbox.click();
-                                dt_checkbox.prop("checked", true);
-                                all = 1;
-                            } else {
-                                dt_checkbox.click();
-                                dt_checkbox.prop("checked", false);
-                                all = 0;
-                            }
-                        });
-                        /*复选框控制 结束*/
+                                if (ev.target === this && this.firstChild.className == TableID + "_dt_check_all") {/*全选所在td*/
+                                    $("." + TableID + "_dt_check_all").click();
+                                }
+                            });
+                            /*处理 复选框所在td 分开特殊处理*/
+                            Table.find("." +TableID + '_td_checkbox').click(function (ev) {
+                                if (ev.target === this) {
+                                    this.firstChild.click();
+                                }
+                            });
+
+                            /* 复选框 选择*/
+                            var dt_checkbox = $("." + TableID + "_dt_checkbox");
+                            dt_checkbox.click(function () {
+                                var C = [];
+                                var data = null;
+                                var r = 0;
+                                /*点选加入到数组*/
+                                for (var i = 0; i < dt_checkbox.length; i++) {
+                                    r = GerRowData(dt_checkbox.eq(i)[0].parentNode.nextSibling);
+                                    if (dt_checkbox.eq(i)[0].checked) {
+                                        data = GetJSONData[TableID][r - 2];
+                                        C.push(data);
+                                    }
+                                }
+                                if (C.length < 1) {
+                                    C = null;
+                                }
+                                CheckData[TableID] = C;
+                            });
+                            /*全选*/
+                            var all = 0;
+                            $("." + TableID + "_dt_check_all").click(function () {
+                                if (all == 0) {
+                                    dt_checkbox.click();
+                                    dt_checkbox.prop("checked", true);
+                                    all = 1;
+                                } else {
+                                    dt_checkbox.click();
+                                    dt_checkbox.prop("checked", false);
+                                    all = 0;
+                                }
+                            });
+                            /*checked 取消选择 用于页码操作恢复*/
+                            ClearChoice=function (TableID){
+                                var check_all=$("." + TableID + "_dt_check_all");
+                                if(check_all.is(':checked')){
+                                    check_all.click();
+                                }
+                                var checked=$("." + TableID + "_dt_checkbox");
+                                for (var i=0;i<checked.length;i++){
+                                    if(checked.eq(i).is(':checked')){
+                                        checked.eq(i).click();
+                                    }
+                                }
+                            };
+                            /*复选框控制 结束*/
+                        }
                     }
-
                     /*******事件方法 开始*******/
-                    $("." + TableID + "_dt_edit").click(function () {/*编辑点击方法*/
+                    Table.find("." + TableID + "_td").find(".Button").click(function () {/*自定义按钮点击方法*/
+                        var button = this.getAttribute("data-button");
                         var data = GetClickRowData(this, 0, TableID);
                         /*获取绑定 参数数据 点击行*/
-                        Object.editClick(data);
+                        try {
+                            Object[button + "Click"](data);
+                        } catch (Ex) {
+                            //用于处理，设置按钮但是未设置事件
+                        }
+                    });
 
-                    });
-                    $("." + TableID + "_dt_del").click(function () {/*删除点击方法*/
-                        var data = GetClickRowData(this, 0, TableID);
-                        /*获取绑定 参数数据 点击行*/
-                        Object.delClick(data);
-                    });
-                    $("." + TableID + "_dt_custom").click(function () {/*删除点击方法*/
-                        var data = GetClickRowData(this, 0, TableID);
-                        /*获取绑定 参数数据 点击行*/
-                        Object.customClick(data);
-                    });
                     /*定义setTimeout执行方法 解决单击双击冲突*/
                     var TimeFn = null;
                     Table.find("." + TableID + "_td").click(function (ev) {/*单击事件方法*/
