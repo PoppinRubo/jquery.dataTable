@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dataTable操作文档</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", "微软雅黑", helvetica, arial, verdana, tahoma, sans-serif;
+            font-size: 14px;
+            color: #232323;
+        }
+
+        p {
+            margin: 0 auto;
+            position: relative;
+            width: 100%;
+            text-align: center;
+        }
+
+        table {
+            border: #a0c6e5;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        td {
+            border: solid 1px #a0c6e5;
+            height: 20px;
+            padding: 5px;
+        }
+
+        .code {
+            position: relative;
+            width: 800px;
+            left: 20%;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="DocumentScript/prism.css">
+</head>
+<body>
+<table border="1" style="border-collapse:collapse;">
+    <tr>
+        <td colspan="3" style="text-align: center"> dataTable配置项</td>
+    </tr>
+    <tr>
+        <td>配置项</td>
+        <td>说明</td>
+        <td>选项</td>
+    </tr>
+    <tr>
+        <td>debug</td>
+        <td>是否开启调试模式，默认关闭</td>
+        <td>可选,,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>check</td>
+        <td>行是否开启复选框,默认关闭</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>pageCapacity</td>
+        <td>页码容量，一页显示数据的条数，默认为10行</td>
+        <td>可选，int 正整数</td>
+    </tr>
+    <tr>
+        <td>loading</td>
+        <td>是否显示加载动画，默认加载</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>url</td>
+        <td>返回数据的URL地址,返回数据为json格式，不填写只能生成表头</td>
+        <td>必选,string类型</td>
+    </tr>
+    <tr>
+        <td>style</td>
+        <td>table样式设置,可自行编写css样式，多项，格式{"font-size": "12px", "width": "800px"}</td>
+        <td>可选,object类型</td>
+    </tr>
+    <tr>
+        <td>align</td>
+        <td>内容停靠方向,默认靠向左</td>
+        <td>可选，string类型center , left , right</td>
+    </tr>
+    <tr>
+        <td>ButtonStyle</td>
+        <td>按钮部件风格，按钮背景色与字体颜色，两项,格式{fontColor:"#ffffff",backgroundColor:"#10AA9C"}，默认黑色</td>
+        <td>可选,object类型</td>
+    </tr>
+    <tr>
+        <td>oddEven</td>
+        <td>奇偶行样式，开启后显示样式区别奇偶行,默认开启</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td rowspan="5" style="padding: 0;">
+            <table border="1" style="border-collapse:collapse;margin: 0">
+                <tr>
+                    <td rowspan="6" style="border: none;border-right:solid 1px #a0c6e5;">columns</td>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">ColumnName</td>
+                </tr>
+                <tr>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">title</td>
+                </tr>
+                <tr>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">width</td>
+                </tr>
+                <tr>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">button</td>
+                </tr>
+                <tr>
+                    <td style="border: none;">buttonName</td>
+                </tr>
+            </table>
+        </td>
+        <td>绑定的字段名，必须与返回数据字段对应，自定义列可不设置该属性</td>
+        <td>非按钮列必选，string类型</td>
+    </tr>
+    <tr>
+        <td>显示的表头列名</td>
+        <td>必选，string类型</td>
+    </tr>
+    <tr>
+        <td>列宽</td>
+        <td>可选，int 正整数</td>
+    </tr>
+    <tr>
+        <td>自定义按钮功能列，设置按钮名为此按钮标识，自定义列可必选设置该属性，自定义按钮列不需设置ColumnName</td>
+        <td>按钮列必选，string类型,英文(与事件绑定)</td>
+    </tr>
+    <tr>
+        <td>自定义按钮功能列,显示的按钮名，自定义列可必选设置该属性，自定义按钮列不需设置ColumnName</td>
+        <td>按钮列必选，string类型</td>
+    </tr>
+</table>
+<table border="1" style="border-collapse:collapse;">
+    <tr>
+        <td colspan="3" style="text-align: center"> dataTable事件</td>
+    </tr>
+    <tr>
+        <td>事件名</td>
+        <td>说明</td>
+        <td>使用方法</td>
+    </tr>
+    <tr>
+        <td>Click</td>
+        <td>行单击事件,返回该行数据</td>
+        <td>Click: function (row){alert(row.id);}使用row.返回数据字段可获得数据,列未显示也可获得数据</td>
+    </tr>
+    <tr>
+        <td>doubleClick</td>
+        <td>行双击击事件，返回该行数据，该双击事件不触发单击事件</td>
+        <td>设置doubleClick: function (row){alert(row.id);}使用row.返回数据字段可获得数据,列未显示也可获得数据</td>
+    </tr>
+    <tr>
+        <td>自定义Click</td>
+        <td>点击按钮，返回该行数据,设置的button为del 则事件为delClick</td>
+        <td>设置 自定义Click:function (row) {alert(row.id);} 与双击单击事件用法一致</td>
+    </tr>
+</table>
+<p style="text-align: left;padding: 0 0 0 50px;width: 90%">jquery.dataTable的使用</p>
+<br>
+<p>引入JQ及dataTable插件</p>
+<pre class="  language-markup code"><code class="  language-markup"><span class="token tag"><span
+        class="token tag"><span
+        class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span
+        class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span
+        class="token punctuation">"</span></span> <span class="token attr-name">src</span><span
+        class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jquery-3.1.1.min.js<span
+        class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span
+        class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span
+        class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span
+        class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span
+        class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span> <span
+        class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span
+        class="token punctuation">"</span>jquery.dataTable.js<span class="token punctuation">"</span></span><span
+        class="token punctuation">&gt;</span></span><span class="token script language-javascript"></span><span
+            class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span
+            class="token punctuation">&gt;</span></span></code></pre>
+<p>创建table</p>
+<pre class="  language-markup code"><code class="  language-markup"><span class="token tag"><span
+        class="token tag"><span
+        class="token punctuation">&lt;</span>table</span> <span class="token attr-name">id</span><span
+        class="token attr-value"><span class="token punctuation">=</span><span
+        class="token punctuation">"</span>table<span class="token punctuation">"</span></span><span
+        class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span
+        class="token punctuation">&lt;/</span>table</span><span
+        class="token punctuation">&gt;</span></span></code></pre>
+<p>绑定示例</p>
+<pre class="  language-javascript code"><code class="  language-javascript"><span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#Table"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">dataTable</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        debug<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        check<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        pageCapacity<span class="token punctuation">:</span><span class="token number">15</span><span class="token punctuation">,</span>
+        loading<span class="token punctuation">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+        oddEven<span class="token punctuation">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+        url<span class="token punctuation">:</span> <span class="token string">"data.php"</span><span class="token punctuation">,</span>
+        style<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">"font-size"</span><span class="token punctuation">:</span> <span class="token string">"12px"</span><span class="token punctuation">,</span> <span class="token string">"width"</span><span class="token punctuation">:</span> <span class="token string">"800px"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        align<span class="token punctuation">:</span><span class="token string">"center"</span><span class="token punctuation">,</span>
+        ButtonStyle<span class="token punctuation">:</span><span class="token punctuation">{</span>fontColor<span class="token punctuation">:</span><span class="token string">"#ffffff"</span><span class="token punctuation">,</span>backgroundColor<span class="token punctuation">:</span><span class="token string">"#10AA9C"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        columns<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span>ColumnName<span class="token punctuation">:</span> <span class="token string">"id"</span><span class="token punctuation">,</span> title<span class="token punctuation">:</span> <span class="token string">"ID"</span><span class="token punctuation">,</span> width<span class="token punctuation">:</span> <span class="token number">30</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>ColumnName<span class="token punctuation">:</span> <span class="token string">"name"</span><span class="token punctuation">,</span> title<span class="token punctuation">:</span> <span class="token string">"视频名"</span><span class="token punctuation">,</span> width<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>title<span class="token punctuation">:</span> <span class="token string">"查看"</span><span class="token punctuation">,</span> button<span class="token punctuation">:</span> <span class="token string">"show"</span><span class="token punctuation">,</span> buttonName<span class="token punctuation">:</span> <span class="token string">"查看"</span><span class="token punctuation">,</span> width<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>title<span class="token punctuation">:</span> <span class="token string">"编辑"</span><span class="token punctuation">,</span> button<span class="token punctuation">:</span> <span class="token string">"edit"</span><span class="token punctuation">,</span> buttonName<span class="token punctuation">:</span> <span class="token string">"编辑"</span><span class="token punctuation">,</span> width<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>title<span class="token punctuation">:</span> <span class="token string">"删除"</span><span class="token punctuation">,</span> button<span class="token punctuation">:</span> <span class="token string">"del"</span><span class="token punctuation">,</span> buttonName<span class="token punctuation">:</span> <span class="token string">"删除"</span><span class="token punctuation">,</span> width<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">}</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        Click<span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"单击："</span><span class="token operator">+</span>row<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        doubleClick<span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"双击："</span><span class="token operator">+</span>row<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token punctuation">,</span>
+        editClick<span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"自定义编辑："</span><span class="token operator">+</span>row<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token punctuation">,</span>
+        delClick<span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"自定义删除："</span><span class="token operator">+</span>row<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        showClick<span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"自定义查看："</span><span class="token operator">+</span>row<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p style="text-align: left;width: 60%">后台需配合插件做分页设置，插件会用get方式发送为pager的json字符串对象,后台需要解析该字符串为对象，该对象为<br>
+    page : 页码<br>
+    pageCapacity : 页码容量(页显示条数)<br>
+    参照PHP版本可解析到对象,并处理输出</p>
+<pre class="  language-php code"><code class=" language-php">    <span class="token variable">$pager</span> <span
+        class="token operator">=</span> <span class="token function">json_decode</span><span
+        class="token punctuation">(</span><span class="token variable">$_GET</span><span
+        class="token punctuation">[</span><span class="token string">"pager"</span><span
+        class="token punctuation">]</span><span class="token punctuation">)</span><span
+        class="token punctuation">;</span>
+    <span class="token variable">$page</span><span class="token operator">=</span><span
+            class="token variable">$pager</span><span class="token operator">-</span><span
+            class="token operator">&gt;</span><span class="token property">page</span><span
+            class="token punctuation">;</span>
+    <span class="token variable">$Capacity</span> <span class="token operator">=</span> <span class="token variable">$pager</span><span
+            class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">pageCapacity</span><span
+            class="token punctuation">;</span>
+    <span class="token variable">$List</span> <span class="token operator">=</span> <span
+            class="token variable">$DB</span><span class="token operator">-</span><span
+            class="token operator">&gt;</span><span class="token function">order</span><span
+            class="token punctuation">(</span><span class="token string">'id desc'</span><span
+            class="token punctuation">)</span><span class="token operator">-</span><span
+            class="token operator">&gt;</span><span class="token function">limit</span><span
+            class="token punctuation">(</span><span class="token variable">$page</span><span
+            class="token punctuation">,</span> <span class="token variable">$Capacity</span><span
+            class="token punctuation">)</span><span class="token operator">-</span><span
+            class="token operator">&gt;</span><span class="token function">select</span><span class="token punctuation">(</span><span
+            class="token string">'video'</span><span class="token punctuation">)</span><span
+            class="token punctuation">;</span>
+    <span class="token variable">$total</span> <span class="token operator">=</span> <span
+            class="token variable">$DB</span><span class="token operator">-</span><span
+            class="token operator">&gt;</span><span class="token function">count</span><span
+            class="token punctuation">(</span><span class="token string">'video'</span><span
+            class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$rows</span> <span class="token operator">=</span> <span
+            class="token keyword">array</span><span class="token punctuation">(</span><span
+            class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$List</span> <span
+            class="token keyword">as</span> <span class="token variable">$ListRow</span><span class="token punctuation">)</span> <span
+            class="token punctuation">{</span>
+        <span class="token variable">$rows</span><span class="token punctuation">[</span><span
+            class="token punctuation">]</span> <span class="token operator">=</span> <span
+            class="token keyword">array</span><span class="token punctuation">(</span>
+            <span class="token string">'id'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span
+            class="token variable">$ListRow</span><span class="token punctuation">[</span><span class="token string">'id'</span><span
+            class="token punctuation">]</span><span class="token punctuation">,</span>
+            <span class="token string">'name'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span
+            class="token variable">$ListRow</span><span class="token punctuation">[</span><span class="token string">'name'</span><span
+            class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token variable">$data</span> <span class="token operator">=</span> <span
+            class="token keyword">array</span><span class="token punctuation">(</span><span
+            class="token string">'total'</span> <span class="token operator">=</span><span
+            class="token operator">&gt;</span> <span class="token variable">$total</span><span
+            class="token punctuation">,</span> <span class="token string">'rows'</span> <span
+            class="token operator">=</span><span class="token operator">&gt;</span> <span
+            class="token variable">$rows</span><span class="token punctuation">)</span><span
+            class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token function">json_encode</span><span
+            class="token punctuation">(</span><span class="token variable">$data</span><span
+            class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p style="text-align: left;width: 60%">Java版本(mysql)</p>
+<pre class="code language-java"><code class=" language-java">	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">doGet</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">)</span>
+			<span class="token keyword">throws</span> ServletException<span class="token punctuation">,</span> IOException <span class="token punctuation">{</span>
+
+		response<span class="token punctuation">.</span><span class="token function">setContentType</span><span class="token punctuation">(</span><span class="token string">"text/html"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		PrintWriter out <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		JdbcHelper db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JdbcHelper</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token comment" spellcheck="true">//get获取json字符串对象</span>
+		String  pager<span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getParameter</span><span class="token punctuation">(</span><span class="token string">"pager"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token comment" spellcheck="true">//字符串转换为对象</span>
+		JSONObject jsonObject <span class="token operator">=</span> JSONObject<span class="token punctuation">.</span><span class="token function">fromObject</span><span class="token punctuation">(</span>pager<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token comment" spellcheck="true">//提取参数</span>
+		<span class="token keyword">int</span> page<span class="token operator">=</span>jsonObject<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"page"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">int</span> pageCapacity<span class="token operator">=</span>jsonObject<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"pageCapacity"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token comment" spellcheck="true">//简单处理分页</span>
+		<span class="token keyword">int</span> p<span class="token operator">=</span><span class="token punctuation">(</span>page<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">*</span>pageCapacity<span class="token punctuation">;</span>
+		String sql<span class="token operator">=</span><span class="token string">"select * from video order by id desc limit "</span><span class="token operator">+</span>p<span class="token operator">+</span><span class="token string">","</span><span class="token operator">+</span>pageCapacity<span class="token operator">+</span><span class="token string">""</span><span class="token punctuation">;</span>	
+		JSONArray jsonArray <span class="token operator">=</span> JSONArray<span class="token punctuation">.</span><span class="token function">fromObject</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>sql<span class="token punctuation">,</span>null<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//list转换json字符串</span>
+		String sqlcount<span class="token operator">=</span><span class="token string">"select * from video"</span><span class="token punctuation">;</span>
+		<span class="token keyword">int</span> total<span class="token operator">=</span>db<span class="token punctuation">.</span><span class="token function">queryCount</span><span class="token punctuation">(</span>sqlcount<span class="token punctuation">,</span>null<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		String json<span class="token operator">=</span><span class="token string">"{"</span><span class="token operator">+</span><span class="token string">"\"total\":"</span><span class="token operator">+</span>total<span class="token operator">+</span><span class="token string">",\"rows\":"</span><span class="token operator">+</span>jsonArray<span class="token operator">+</span><span class="token string">"}"</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//格式拼接</span>
+		out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span>json<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		out<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		out<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span></code></pre>
+<p style="text-align: left;width: 60%">以上示例仅供参考,不建议直接使用在项目。对于分页可自行封装</p>
+</br>
+<p>返回的json格式(total:数据总条数,并非页数)</p>
+<pre class="  language-json code"><code class=" language-json"><span class="token punctuation">{</span>
+  <span class="token property">"total"</span><span class="token operator">:</span> <span
+            class="token number">3744</span><span class="token punctuation">,</span>
+  <span class="token property">"rows"</span><span class="token operator">:</span> <span
+            class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"id"</span><span class="token operator">:</span> <span
+            class="token number">3832</span><span class="token punctuation">,</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Haeni Kim- Falling For Someone New - Kuma"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"id"</span><span class="token operator">:</span> <span
+            class="token number">3831</span><span class="token punctuation">,</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Top Moments- A Friday Night vol. 100 (Korea)"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"id"</span><span class="token operator">:</span> <span
+            class="token number">3830</span><span class="token punctuation">,</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"WAACKXXY Waacking 2017"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"id"</span><span class="token operator">:</span> <span
+            class="token number">3829</span><span class="token punctuation">,</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"TRIX a.k.a. EYE X Krump 2017"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<p>获取返回数据的使用方法</p>
+<pre class="  language-javascript code"><code class=" language-javascript"><span class="token function">$</span><span
+        class="token punctuation">(</span><span class="token string">'#Table'</span><span
+        class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">GetJSONArray</span><span
+        class="token punctuation">(</span><span
+        class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment"
+                                                                                        spellcheck="true">//获取Table通过URL获取到的数据，为数组类型的数据集</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span
+            class="token string">'#Table'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span
+            class="token function">GetCheckArray</span><span class="token punctuation">(</span><span
+            class="token punctuation">)</span><span
+            class="token punctuation">;</span><span class="token comment" spellcheck="true">//获取当前复选框选中的值，为数组类型的数据集,未选择获取到null</span></code></pre>
+<p>刷新表格数据</p>
+<pre class="  language-javascript code"><code class="  language-javascript"><span class="token function">$</span><span
+        class="token punctuation">(</span><span class="token string">'#Table'</span><span
+        class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">TableRefresh</span><span
+        class="token punctuation">(</span><span class="token punctuation">)</span><span
+        class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//通过table绑定调用可以刷新当前表格数据，</span>
+<span class="token comment" spellcheck="true">//效果相当于点击了一下刷新按钮，</span>
+<span class="token comment" spellcheck="true">//要说明的是数据无变化并且没有开启loading，看着没变化并不是坏掉了</span></code></pre>
+
+<dataTable style="width: 100%;padding: 10px 30px;text-align: right;position: relative;float: right;margin: 50px">
+    jquery.dataTable 0.94 by PoppinRubo
+</dataTable>
+<script type="text/javascript" src="DocumentScript/prism.js"></script>
+</body>
+</html>
