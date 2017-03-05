@@ -331,7 +331,7 @@ var GetJSONData = {};
                             endPage.css({"cursor": "not-allowed"});
                         }
                     }
-
+                    pagControl(page);
                     /*页码部分 结束*/
                     if (!empty(check)) {/*检查是否开启复选框 完成对应代码*/
                         /*复选框控制 开始*/
