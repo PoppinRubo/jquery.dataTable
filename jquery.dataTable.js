@@ -1,5 +1,5 @@
 ////////////////////////////
-/* 版本号1.0 */
+/* 版本号1.1 */
 ////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -54,11 +54,11 @@ var GetJSONData = {};
             }
             var columns = Object.columns;
             if (empty(columns)) {/*检查是否绑定表格配置*/
-                debug("未绑定columns");
+                debug(TableID+"未绑定columns");
                 return false;
             }
             if (empty(Table[0])) {
-                debug("未找到 " + Table.selector + " ,检查table是否存在");
+                debug("未找到指定的table,检查table是否存在");
                 return false;
             }
             /*生成表头*/
@@ -80,6 +80,8 @@ var GetJSONData = {};
                     Table.find("tr").eq(0).prepend("<td class='" + TableID + "_td' title='全选' style='width:25px'><input class='" + TableID + "_dt_check_all' type='checkbox'></td>");
                 }
             }
+            /*为保证表头与生成行列样式在生成时间间隔不产生突兀感先调用一次*/
+            TableStyle();
             function TableStyle() {
                 /*Table样式*/
                 Table.css({
@@ -157,7 +159,7 @@ var GetJSONData = {};
             /*URl数据请求 数据 方式创建DataTable 该地址返回的数据为json格式*/
             var url = Object.url;
             if (empty(url)) {/*检查是否绑定URL*/
-                debug("未绑定url");
+                debug(TableID+"未绑定url");
                 /*table样式*/
                 TableStyle();
                 return false;
@@ -186,13 +188,13 @@ var GetJSONData = {};
                         /*把数据创建表格拆分出去是为了代码不乱整洁好看*/
                         dataClearTable(TableID,total,json,Table,columns,Object);
                     } else {
-                        debug("返回数据为空,或返回格式不正确");
+                        debug(TableID+"返回数据为空,或返回格式不正确");
                     }
                 },
                 error: function (msg) {
                     /*结束加载动画*/
                     Animation(TableID, 'stop');
-                    status(msg);
+                    status(TableID,msg);
                 }
             });
             /*使用数据创建表格,此创建为初次创建*/
@@ -210,12 +212,12 @@ var GetJSONData = {};
                         var facility = Object.columns[c]["button"];
                         if (!empty(facility)) {
                             if (facility == "") {
-                                debug("未定义按钮");
+                                debug(TableID+"未定义按钮");
                                 return false;
                             }
                             var buttonName = Object.columns[c]["buttonName"];
                             if (empty(buttonName) || buttonName == "") {
-                                debug("自定义按钮未设置按钮名");
+                                debug(TableID+"自定义按钮未设置按钮名");
                                 return false;
                             }
                             ColumnContent = "<span data-button='" + facility + "' class='" + TableID + "_button_" + facility + " Button'>" + buttonName + "</span>";
@@ -467,6 +469,36 @@ var GetJSONData = {};
                         //用于处理，设置按钮但是未设置事件
                     }
                 });
+                /*行选中标记默认开启*/
+                var sign=true;
+                /*检查是否开启行选中标记*/
+                if(!empty(Object.sign)){
+                    sign=Object.sign;
+                }
+                if(sign){
+                    Table.find("." + TableID + "_td").click(function (ev) {/*单击事件方法设置选中行标识,行用td设置*/
+                        if (ev.target ===this&&this.parentNode.className != TableID + "_dt_head") {
+                            /*初始化*/
+                            Table.find("tr").find("td").css({
+                                "border": "1px solid #d8d8d8",
+                                "padding":"5px"
+                            });
+                            /*设置选中标记开始*/
+                            var firstChildren=$(this).parent().children(":first");
+                            /*默认风格*/
+                            var style="#232323";
+                            /*检查是否设置风格*/
+                            if (!empty(Object.ButtonStyle)) {
+                                style=Object.ButtonStyle.backgroundColor;
+                            }
+                            firstChildren.css({
+                                "border-left":"5px solid "+style,
+                                "padding":"0 3px 0 0"
+                            });
+                            /*设置选中标记结束*/
+                        }
+                    });
+                }
 
                 /*定义setTimeout执行方法 解决单击双击冲突*/
                 var TimeFn = null;
@@ -513,14 +545,14 @@ var GetJSONData = {};
         return typeof(b) == "undefined";
     }
     /*后台错误提示*/
-    function status(msg) {
+    function status(TableID,msg) {
         var statusTips="";
         if(msg.status==404){
             statusTips=",出现此情况一般为URL不正确未请求到后台"
         }else if(msg.status==500){
             statusTips=",出现此情况一般为后台程序发生错误"
         }
-        debug("请求后台时发生错误,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
+        debug(TableID+"请求后台时发生错误,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
     }
     function DifferentStyle(t,Object) {/*奇偶行行样式*/
         var oddEven=true;
@@ -659,7 +691,7 @@ var GetJSONData = {};
                             Table.find("tr").show();
                         }
                     } else {
-                        debug("返回数据为空,或返回格式不正确");
+                        debug(TableID+"返回数据为空,或返回格式不正确");
                     }
                 }
             },
@@ -684,9 +716,9 @@ var GetJSONData = {};
     }
     function debug(msg) {/*调试模式 错误提醒*/
         if (DebugMsg) {
-            $("body").append("<div id='DataTableDebugMsg'>DataTable调试信息: <span style='color: #ff5c6f;'>" + msg + "!</span><a id='debugOut' href='javascript:void(0);'>(点我隐藏此条信息,么么哒)</a></div>");
-            var DataTableDebugMsg = $("#DataTableDebugMsg");
-            var debugOut = $("#debugOut");
+            $("body").append("<div class='DataTableDebugMsg'>DataTable调试信息: <span style='color: #ff5c6f;'>" + msg + "!</span><a class='debugOut' href='javascript:void(0);'>(点我隐藏此条信息,么么哒)</a></div>");
+            var DataTableDebugMsg = $(".DataTableDebugMsg");
+            var debugOut = $(".debugOut");
             DataTableDebugMsg.css({
                 "position": "fixed",
                 "z-index": "9999",
@@ -710,8 +742,7 @@ var GetJSONData = {};
                 "text-decoration":"none"
             });
             debugOut.click(6000, function () {
-                DataTableDebugMsg.remove();
-                debugOut.remove();
+                $(this).parent().remove();
             });
         }
         return false;
