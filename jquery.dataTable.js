@@ -162,8 +162,6 @@ var GetJSONData = {};
                 TableStyle();
                 return false;
             }
-            Animation(TableID, 'start');
-            /*开始加载动画*/
             $.ajax({/*根据URL拉取数据,初次拉取创建*/
                 type: "GET",
                 url: url,
@@ -175,9 +173,13 @@ var GetJSONData = {};
                 },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                beforeSend: function () {
+                    /*开始加载动画*/
+                    Animation(TableID, 'start');
+                },
                 success: function (json) {
-                    Animation(TableID, 'stop');
                     /*结束加载动画*/
+                    Animation(TableID, 'stop');
                     var total = json.total;
                     json = json.rows;
                     if (json != null) {
@@ -188,6 +190,8 @@ var GetJSONData = {};
                     }
                 },
                 error: function (msg) {
+                    /*结束加载动画*/
+                    Animation(TableID, 'stop');
                     status(msg);
                 }
             });
@@ -606,7 +610,6 @@ var GetJSONData = {};
     }
     /*表格数据更新-页码操作 避免页码操作产生闪烁情况 则不使用清理重建*/
     function UpdateData(Object, Table, TableID, page) {
-        Animation(TableID, 'start');
         var columns = Object.columns;
         var pageCapacity = Object.pageCapacity;
         $.ajax({/*根据URL拉取数据,更新表格*/
@@ -620,12 +623,15 @@ var GetJSONData = {};
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+            beforeSend: function () {
+                /*开始加载动画*/
+                Animation(TableID, 'start');
+            },
             success: function (json) {
                 /*结束加载动画*/
                 Animation(TableID, 'stop');
                 if (json != null) {
                     var total = json.total;
-                    Animation(TableID, 'stop');
                     json = json.rows;
                     if (json != null) {
                         var jsonCount = json.length;
@@ -658,6 +664,8 @@ var GetJSONData = {};
                 }
             },
             error: function (msg) {
+                /*结束加载动画*/
+                Animation(TableID, 'stop');
                 status(msg);
             }
         });
@@ -674,7 +682,6 @@ var GetJSONData = {};
         }
         return 0;
     }
-
     function debug(msg) {/*调试模式 错误提醒*/
         if (DebugMsg) {
             $("body").append("<div id='DataTableDebugMsg'>DataTable调试信息: <span style='color: #ff5c6f;'>" + msg + "!</span><a id='debugOut' href='javascript:void(0);'>(点我隐藏此条信息,么么哒)</a></div>");
