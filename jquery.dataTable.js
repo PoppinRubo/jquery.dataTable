@@ -552,7 +552,7 @@ var GetJSONData = {};
         }else if(msg.status==500){
             statusTips=",出现此情况一般为后台程序发生错误"
         }
-        debug(TableID+"请求后台时发生错误,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
+        debug(TableID+"后台返回信息,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
     }
     function DifferentStyle(t,Object) {/*奇偶行行样式*/
         var oddEven=true;
