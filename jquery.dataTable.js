@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-      /* dataTable 版本号1.11 */
+      /* dataTable 版本号1.12 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -41,7 +41,10 @@ var GetJSONData = {};
             if (!empty(Object.pageCapacity)) {
                 TableSet[TableID].Object.pageCapacity = Object.pageCapacity;
             } else {
-                TableSet[TableID].Object.pageCapacity = pageCapacity;
+                /*虽然未绑定,但检查是否有记录,针对url搜索查询情况*/
+                if(empty(TableSet[TableID].Object.pageCapacity)){
+                    TableSet[TableID].Object.pageCapacity = pageCapacity;
+                }
             }
 
             /*读出记录 开始*/
