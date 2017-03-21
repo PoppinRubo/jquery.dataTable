@@ -369,6 +369,13 @@
 <span class="token comment" spellcheck="true">//通过table绑定调用可以刷新当前表格数据，</span>
 <span class="token comment" spellcheck="true">//效果相当于点击了一下刷新按钮，</span>
 <span class="token comment" spellcheck="true">//要说明的是数据无变化并且没有开启loading，看着没变化并不是坏掉了</span></code></pre>
+<p>通过url实现搜索功能</p>
+<pre class="code language-javascript"><code class="  language-javascript"><span class="token comment" spellcheck="true">//如果绑定的URL为url: "data.php",则可以通过</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#Table"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">dataTable</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    url<span class="token punctuation">:</span> <span class="token string">"data.php?name=查询"</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//来设置,然后后台对URL的get请求参数的处理进行表格的搜索查询</span></code></pre>
+
 
 <dataTable style="width: 100%;padding: 10px 30px;text-align: right;position: relative;float: right;margin: 50px">
     jquery.dataTable by PoppinRubo
