@@ -1,6 +1,6 @@
-////////////////////////////
-/* 版本号1.1 */
-////////////////////////////
+///////////////////////////////////////
+      /* dataTable 版本号1.11 */
+///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
 /*选择行对象 对于复选框 外部可访问*/
@@ -552,7 +552,7 @@ var GetJSONData = {};
         }else if(msg.status==500){
             statusTips=",出现此情况一般为后台程序发生错误"
         }
-        debug(TableID+"后台返回信息,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
+        debug(TableID+"请求后台时发生错误,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
     }
     function DifferentStyle(t,Object) {/*奇偶行行样式*/
         var oddEven=true;
@@ -613,9 +613,14 @@ var GetJSONData = {};
         var width = table.width();
         var height = table.height();
         var startAnimation = null;
+        var TableLoading = $('#' + TableID+ "_loading");
         if (o == "start") {
+            /*检查是否存在loading*/
+            if(TableLoading.length>0){
+                TableLoading.remove();//存在先移除动画
+            }
             /*加载效果开始*/
-            var loading = '<div id="' + TableID + '_dt_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: ' + width + 'px;height: ' + height + 'px;' +
+            var loading = '<div id="' + TableID + '_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: ' + width + 'px;height: ' + height + 'px;' +
                 'text-align: center;font-size: 14px;font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;">' +
                 '<span style="margin-top: ' + top + 'px;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:#232323;">3</span></span>' +
                 '<span style="margin-top: ' + eval(top + 20) + 'px;position: absolute;">加载中...</span></div>';
@@ -633,7 +638,7 @@ var GetJSONData = {};
         }
         if (o == "stop") {
             startAnimation = null;
-            $("#" + TableID + "_dt_loading").remove();//移除动画
+            TableLoading.remove();//移除动画
         }
     }
 
