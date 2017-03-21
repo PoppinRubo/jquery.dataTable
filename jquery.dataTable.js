@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-      /* dataTable 版本号1.12 */
+      /* dataTable 版本号1.13 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -236,22 +236,24 @@ var GetJSONData = {};
                     }
                 }
                 /*页码部分 开始*/
-                /*页码工具 创建*/
-                var totalPage = Math.ceil(total / pageCapacity);
-                var pager = "<div class='tablePager' style='width: 100%;position: absolute;height: 35px;'>" +
-                    "<span style='float: left;margin: 10px;'>显示条数:</span>" +
-                    "<select class='Button " + TableID + "_select'>" +
-                    "<option>10</option><option>20</option><option>30</option><option>40</option><option>50</option></select>" +
-                    "<span class='Button " + TableID + "_firstPage' title='跳到第一页'>首页</span>" +
-                    "<span class='Button " + TableID + "_aPage' title='上一页'>上一页</span>" +
-                    "<span class='Button " + TableID + "_nextPage' title='下一页'>下一页</span>" +
-                    "<span class='Button " + TableID + "_endPage' title='跳到最后一页'>尾页</span>" +
-                    "<span class='" + TableID + "_PageInput' style='float: left;'>" +
-                    "<input class='" + TableID + "_inp' maxlength='5' placeholder='跳页' style='width: 50px;margin: 6px;'>" +
-                    "</span><span class='Button " + TableID + "_ok' title='跳到目标页'>确定</span>" +
-                    "</span><span class='Button " + TableID + "_refresh' title='刷新表格数据'>刷新</span>" +
-                    "<span class='" + TableID + "_page_tip' style='float: left;margin: 10px;'>当前在第" + page + "页,总页" + totalPage + "页</span></div>";
-                Table.append(pager);
+                /*页码工具 创建->有数据才创建*/
+                if(json.length>0){
+                    var totalPage = Math.ceil(total / pageCapacity);
+                    var pager = "<div class='tablePager' style='width: 100%;position: absolute;height: 35px;'>" +
+                        "<span style='float: left;margin: 10px;'>显示条数:</span>" +
+                        "<select class='Button " + TableID + "_select'>" +
+                        "<option>10</option><option>20</option><option>30</option><option>40</option><option>50</option></select>" +
+                        "<span class='Button " + TableID + "_firstPage' title='跳到第一页'>首页</span>" +
+                        "<span class='Button " + TableID + "_aPage' title='上一页'>上一页</span>" +
+                        "<span class='Button " + TableID + "_nextPage' title='下一页'>下一页</span>" +
+                        "<span class='Button " + TableID + "_endPage' title='跳到最后一页'>尾页</span>" +
+                        "<span class='" + TableID + "_PageInput' style='float: left;'>" +
+                        "<input class='" + TableID + "_inp' maxlength='5' placeholder='跳页' style='width: 50px;margin: 6px;'>" +
+                        "</span><span class='Button " + TableID + "_ok' title='跳到目标页'>确定</span>" +
+                        "</span><span class='Button " + TableID + "_refresh' title='刷新表格数据'>刷新</span>" +
+                        "<span class='" + TableID + "_page_tip' style='float: left;margin: 10px;'>当前在第" + page + "页,总页" + totalPage + "页</span></div>";
+                    Table.append(pager);
+                }
                 /*table样式*/
                 TableStyle();
                 var inp = $("." + TableID + "_inp");
@@ -555,7 +557,7 @@ var GetJSONData = {};
         }else if(msg.status==500){
             statusTips=",出现此情况一般为后台程序发生错误"
         }
-        debug(TableID+"请求后台时发生错误,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
+        debug(TableID+"后台信息,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
     }
     function DifferentStyle(t,Object) {/*奇偶行行样式*/
         var oddEven=true;
@@ -698,6 +700,11 @@ var GetJSONData = {};
                         } else {
                             Table.find("tr").show();
                         }
+                        /*消除设置行选中标记*/
+                        Table.find("tr").find("td").css({
+                            "border": "1px solid #d8d8d8",
+                            "padding":"5px"
+                        });
                     } else {
                         debug(TableID+"返回数据为空,或返回格式不正确");
                     }
