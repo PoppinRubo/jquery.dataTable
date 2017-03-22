@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-      /* dataTable 版本号1.13 */
+      /* dataTable 版本号1.14 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -189,7 +189,7 @@ var GetJSONData = {};
                     json = json.rows;
                     if (json != null) {
                         /*把数据创建表格拆分出去是为了代码不乱整洁好看*/
-                        dataClearTable(TableID,total,json,Table,columns,Object);
+                        dataCreateTable(TableID,total,json,Table,columns,Object);
                     } else {
                         debug(TableID+"返回数据为空,或返回格式不正确");
                     }
@@ -201,7 +201,7 @@ var GetJSONData = {};
                 }
             });
             /*使用数据创建表格,此创建为初次创建*/
-            function dataClearTable(TableID,total,json,Table,columns,Object) {
+            function dataCreateTable(TableID,total,json,Table,columns,Object) {
                 GetJSONData[TableID] = json;
                 for (var r = 0; r < json.length; r++) {/*遍历行*/
                     /*table组装行*/
@@ -291,9 +291,9 @@ var GetJSONData = {};
                 }
                 CapacitySelect.val(Object.pageCapacity);
                 CapacitySelect.change(function () {
-                    ClearTable(Table);
                     /*容量更新*/
                     Object.pageCapacity = CapacitySelect.val();
+                    ClearTable(Table);
                     CreateTable(Object, Table, TableID, page = 1);
                 });
                 /*首页*/
@@ -627,8 +627,8 @@ var GetJSONData = {};
             /*加载效果开始*/
             var loading = '<div id="' + TableID + '_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: ' + width + 'px;height: ' + height + 'px;' +
                 'text-align: center;font-size: 14px;font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;">' +
-                '<span style="margin-top: ' + top + 'px;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:#232323;">3</span></span>' +
-                '<span style="margin-top: ' + eval(top + 20) + 'px;position: absolute;">加载中...</span></div>';
+                '<span style="margin-top: ' + top + 'px;left:'+eval(50-(20/width))+'%;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:#232323;">&nbsp;&nbsp;</span></span>' +
+                '<span style="margin-top: ' + eval(top + 20) + 'px;left:'+eval(50-(20/width))+'%;position: absolute;">加载中...</span></div>';
             table.append(loading);
             var dt_animation = $(".dt_animation");
             startAnimation = function () {
@@ -731,7 +731,7 @@ var GetJSONData = {};
     }
     function debug(msg) {/*调试模式 错误提醒*/
         if (DebugMsg) {
-            $("body").append("<div class='DataTableDebugMsg'>DataTable调试信息: <span style='color: #ff5c6f;'>" + msg + "!</span><a class='debugOut' href='javascript:void(0);'>(点我隐藏此条信息,么么哒)</a></div>");
+            $("body").append("<div class='DataTableDebugMsg'>DataTable调试信息: <span style='color: #ff5c6f;'>" + msg + "!</span><a class='debugOut' href='javascript:void(0);'>(点我隐藏此条信息)</a></div>");
             var DataTableDebugMsg = $(".DataTableDebugMsg");
             var debugOut = $(".debugOut");
             DataTableDebugMsg.css({
