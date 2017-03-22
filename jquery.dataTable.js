@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-      /* dataTable 版本号1.14 */
+      /* dataTable 版本号1.14.1 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -624,11 +624,17 @@ var GetJSONData = {};
             if(TableLoading.length>0){
                 TableLoading.remove();//存在先移除动画
             }
+            /*默认风格*/
+            var style="#232323";
+            /*检查是否设置风格*/
+            if (!empty(TableSet[TableID].Object.ButtonStyle)) {
+                style=TableSet[TableID].Object.ButtonStyle.backgroundColor;
+            }
             /*加载效果开始*/
             var loading = '<div id="' + TableID + '_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: ' + width + 'px;height: ' + height + 'px;' +
                 'text-align: center;font-size: 14px;font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;">' +
-                '<span style="margin-top: ' + top + 'px;left:'+eval(50-(20/width))+'%;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:#232323;">&nbsp;&nbsp;</span></span>' +
-                '<span style="margin-top: ' + eval(top + 20) + 'px;left:'+eval(50-(20/width))+'%;position: absolute;">加载中...</span></div>';
+                '<span style="margin-top: ' + top + 'px;left:'+eval(50-(20/width))+'%;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:'+style+';">&nbsp;&nbsp;</span></span>' +
+                '<span style="margin-top: ' + eval(top + 20) + 'px;left:'+eval(50-(20/width))+'%;position: absolute;color: '+style+';">加载中...</span></div>';
             table.append(loading);
             var dt_animation = $(".dt_animation");
             startAnimation = function () {
