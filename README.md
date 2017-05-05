@@ -38,7 +38,8 @@ $("#Table").dataTable({
         ButtonStyle:{fontColor:"#ffffff",backgroundColor:"#10AA9C"},
         columns: [
             {ColumnName: "id", title: "ID", width: 30},
-            {ColumnName: "name", title: "视频名", width: 500},
+	    {ColumnName: "img", img:true, title: "图片", width: 40},//设置img:true,后台数据反回url这一列就生成图片显示
+            {ColumnName: "name", title: "视频名", width: 500},
             {title: "查看", button: "show", buttonName: "查看", width: 50},
             {title: "编辑", button: "edit", buttonName: "编辑", width: 50},
             {title: "删除", button: "del", buttonName: "删除", width: 50}
