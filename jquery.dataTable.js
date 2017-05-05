@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-      /* dataTable 版本号1.14.1 */
+/* dataTable 版本号1.2.0 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -42,7 +42,7 @@ var GetJSONData = {};
                 TableSet[TableID].Object.pageCapacity = Object.pageCapacity;
             } else {
                 /*虽然未绑定,但检查是否有记录,针对url搜索查询情况*/
-                if(empty(TableSet[TableID].Object.pageCapacity)){
+                if (empty(TableSet[TableID].Object.pageCapacity)) {
                     TableSet[TableID].Object.pageCapacity = pageCapacity;
                 }
             }
@@ -57,7 +57,7 @@ var GetJSONData = {};
             }
             var columns = Object.columns;
             if (empty(columns)) {/*检查是否绑定表格配置*/
-                debug(TableID+"未绑定columns");
+                debug(TableID + "未绑定columns");
                 return false;
             }
             if (empty(Table[0])) {
@@ -110,6 +110,9 @@ var GetJSONData = {};
                 Table.find("tr").eq(0).find("td").eq(0).css({
                     "cursor": "pointer"
                 });
+
+                titltImg(Table);
+
                 Table.find("." + TableID + "_dt_checkbox,." + TableID + "_dt_check_all").css({
                     "width": "15px",
                     "height": "15px",
@@ -139,14 +142,15 @@ var GetJSONData = {};
                         "color": ButtonStyle.fontColor
                     });
                 }
-                DifferentStyle(Table,Object);/*奇偶样式区别*/
+                DifferentStyle(Table, Object);
+                /*奇偶样式区别*/
                 Table.find("tr").hover(function () {/*鼠标悬停背景样式*/
                     if (this.className != TableID + "_dt_head") {
                         this.style.backgroundColor = "#d8d8d8";
                     }
                 }, function () {
                     this.style.backgroundColor = "rgba(216, 216, 216, 0)";
-                    DifferentStyle(Table,Object)
+                    DifferentStyle(Table, Object);
                 });
                 var TableStyle = Object.style;
                 if (!empty(TableStyle)) {/*检查是否自定义table样式*/
@@ -159,15 +163,17 @@ var GetJSONData = {};
                 }
 
             }
+
             /*URl数据请求 数据 方式创建DataTable 该地址返回的数据为json格式*/
             var url = Object.url;
             if (empty(url)) {/*检查是否绑定URL*/
-                debug(TableID+"未绑定url");
+                debug(TableID + "未绑定url");
                 /*table样式*/
                 TableStyle();
                 return false;
             }
-            $.ajax({/*根据URL拉取数据,初次拉取创建*/
+            $.ajax({
+                /*根据URL拉取数据,初次拉取创建*/
                 type: "GET",
                 url: url,
                 data: {
@@ -189,19 +195,20 @@ var GetJSONData = {};
                     json = json.rows;
                     if (json != null) {
                         /*把数据创建表格拆分出去是为了代码不乱整洁好看*/
-                        dataCreateTable(TableID,total,json,Table,columns,Object);
+                        dataCreateTable(TableID, total, json, Table, columns, Object);
                     } else {
-                        debug(TableID+"返回数据为空,或返回格式不正确");
+                        debug(TableID + "返回数据为空,或返回格式不正确");
                     }
                 },
                 error: function (msg) {
                     /*结束加载动画*/
                     Animation(TableID, 'stop');
-                    status(TableID,msg);
+                    status(TableID, msg);
                 }
             });
+
             /*使用数据创建表格,此创建为初次创建*/
-            function dataCreateTable(TableID,total,json,Table,columns,Object) {
+            function dataCreateTable(TableID, total, json, Table, columns, Object) {
                 GetJSONData[TableID] = json;
                 for (var r = 0; r < json.length; r++) {/*遍历行*/
                     /*table组装行*/
@@ -215,19 +222,26 @@ var GetJSONData = {};
                         var facility = Object.columns[c]["button"];
                         if (!empty(facility)) {
                             if (facility == "") {
-                                debug(TableID+"未定义按钮");
+                                debug(TableID + "未定义按钮");
                                 return false;
                             }
                             var buttonName = Object.columns[c]["buttonName"];
                             if (empty(buttonName) || buttonName == "") {
-                                debug(TableID+"自定义按钮未设置按钮名");
+                                debug(TableID + "自定义按钮未设置按钮名");
                                 return false;
                             }
                             ColumnContent = "<span data-button='" + facility + "' class='" + TableID + "_button_" + facility + " Button'>" + buttonName + "</span>";
                             ColumnTitle = buttonName;
                         }
                         /*生成一行一列 data-row= 为自定义标签用于识别行 */
-                        Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "' title='" + ColumnTitle + "'>" + ColumnContent + "</td>");
+                        var img = Object.columns[c]["img"];
+                        /*是否设置为图片显示*/
+                        if (!empty(img) && img) {/*这一列为图片列*/
+                            Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "'><img src='" + ColumnContent + "' class='img'><img src='" + ColumnContent + "' class='showImg'></td>");
+                        } else {
+                            Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "' title='" + ColumnTitle + "'>" + ColumnContent + "</td>");
+                        }
+
                     }
                     if (!empty(Object.check)) {/*检查是否开启复选框 绑定行*/
                         if (Object.check) {
@@ -237,7 +251,7 @@ var GetJSONData = {};
                 }
                 /*页码部分 开始*/
                 /*页码工具 创建->有数据才创建*/
-                if(json.length>0){
+                if (json.length > 0) {
                     var totalPage = Math.ceil(total / pageCapacity);
                     var pager = "<div class='tablePager' style='width: 100%;position: absolute;height: 35px;'>" +
                         "<span style='float: left;margin: 10px;'>显示条数:</span>" +
@@ -475,30 +489,30 @@ var GetJSONData = {};
                     }
                 });
                 /*行选中标记默认开启*/
-                var sign=true;
+                var sign = true;
                 /*检查是否开启行选中标记*/
-                if(!empty(Object.sign)){
-                    sign=Object.sign;
+                if (!empty(Object.sign)) {
+                    sign = Object.sign;
                 }
-                if(sign){
+                if (sign) {
                     Table.find("." + TableID + "_td").click(function (ev) {/*单击事件方法设置选中行标识,行用td设置*/
-                        if (ev.target ===this&&this.parentNode.className != TableID + "_dt_head") {
+                        if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {
                             /*初始化*/
                             Table.find("tr").find("td").css({
                                 "border": "1px solid #d8d8d8",
-                                "padding":"5px"
+                                "padding": "5px"
                             });
                             /*设置选中标记开始*/
-                            var firstChildren=$(this).parent().children(":first");
+                            var firstChildren = $(this).parent().children(":first");
                             /*默认风格*/
-                            var style="#232323";
+                            var style = "#232323";
                             /*检查是否设置风格*/
                             if (!empty(Object.ButtonStyle)) {
-                                style=Object.ButtonStyle.backgroundColor;
+                                style = Object.ButtonStyle.backgroundColor;
                             }
                             firstChildren.css({
-                                "border-left":"5px solid "+style,
-                                "padding":"0 3px 0 0"
+                                "border-left": "5px solid " + style,
+                                "padding": "0 3px 0 0"
                             });
                             /*设置选中标记结束*/
                         }
@@ -545,39 +559,71 @@ var GetJSONData = {};
 
         CreateTable(Obj, t, tid, page);
     };
+
+    /*图片列相关方法及设置*/
+    function titltImg(Table) {
+        Table.find(".img").css({
+            /*图片设置*/
+            "width": "40px",
+            "height": "40px",
+            "margin": "0 0 -5px 0"
+        });
+        Table.find(".showImg").css({
+            /*大图显示title设置*/
+            "position": "absolute",
+            "z-index": 1000,
+            "display": "none",
+            "width": "auto",
+            "height": "auto",
+            "max-width": "500px",
+            "max-height": "500px",
+            "margin": "0 0 0 40px"
+        });
+        /*大图显示title显示设置*/
+        var showImg = Table.find(".img");
+        showImg.hover(function () {
+            this.nextSibling.style.display = "block";
+        }, function () {
+            this.nextSibling.style.display = "none";
+        });
+    }
+
     /**下面是辅助方法**/
     function empty(b) {/*检查是否设置 不存在返回true 为空为true*/
         return typeof(b) == "undefined";
     }
+
     /*后台错误提示*/
-    function status(TableID,msg) {
-        var statusTips="";
-        if(msg.status==404){
-            statusTips=",出现此情况一般为URL不正确未请求到后台"
-        }else if(msg.status==500){
-            statusTips=",出现此情况一般为后台程序发生错误"
+    function status(TableID, msg) {
+        var statusTips = "";
+        if (msg.status == 404) {
+            statusTips = ",出现此情况一般为URL不正确未请求到后台";
+        } else if (msg.status == 500) {
+            statusTips = ",出现此情况一般为后台程序发生错误";
         }
-        debug(TableID+"后台信息,状态码:"+msg.status+",描述:"+msg.statusText+statusTips);
+        debug(TableID + "后台信息,状态码:" + msg.status + ",描述:" + msg.statusText + statusTips);
     }
-    function DifferentStyle(t,Object) {/*奇偶行行样式*/
-        var oddEven=true;
-        var Set=Object.oddEven;
-        if(!empty(Set)){
-            oddEven=Set;
+
+    function DifferentStyle(t, Object) {/*奇偶行行样式*/
+        var oddEven = true;
+        var Set = Object.oddEven;
+        if (!empty(Set)) {
+            oddEven = Set;
         }
-        if(!oddEven){
+        if (!oddEven) {
             return;
         }
         var row = t.find('tr');
-        var num=0;
-        for(var i=0;i<row.length;i++){
-            num=row.eq(i+1).attr(("data-row"));
-            if(num%2 ==0){
-                row.eq(i+1).css({"background-color": "#f2f2f2"});
+        var num = 0;
+        for (var i = 0; i < row.length; i++) {
+            num = row.eq(i + 1).attr(("data-row"));
+            if (num % 2 == 0) {
+                row.eq(i + 1).css({"background-color": "#f2f2f2"});
             }
         }
 
     }
+
     /*行点击操作*/
     /*c 代表的是点谁 c用来找td t代表是区别操作类型 返回行对象*/
     /*0 是编辑删除点击处理  2是单击取数据*/
@@ -618,23 +664,23 @@ var GetJSONData = {};
         var width = table.width();
         var height = table.height();
         var startAnimation = null;
-        var TableLoading = $('#' + TableID+ "_loading");
+        var TableLoading = $('#' + TableID + "_loading");
         if (o == "start") {
             /*检查是否存在loading*/
-            if(TableLoading.length>0){
+            if (TableLoading.length > 0) {
                 TableLoading.remove();//存在先移除动画
             }
             /*默认风格*/
-            var style="#232323";
+            var style = "#232323";
             /*检查是否设置风格*/
             if (!empty(TableSet[TableID].Object.ButtonStyle)) {
-                style=TableSet[TableID].Object.ButtonStyle.backgroundColor;
+                style = TableSet[TableID].Object.ButtonStyle.backgroundColor;
             }
             /*加载效果开始*/
             var loading = '<div id="' + TableID + '_loading" style="position: absolute;left: 0;top:0;color:#232323;background:rgba(250, 250, 250, 0.7);z-index: 500;width: ' + width + 'px;height: ' + height + 'px;' +
                 'text-align: center;font-size: 14px;font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;">' +
-                '<span style="margin-top: ' + top + 'px;left:'+eval(50-(20/width))+'%;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:'+style+';">&nbsp;&nbsp;</span></span>' +
-                '<span style="margin-top: ' + eval(top + 20) + 'px;left:'+eval(50-(20/width))+'%;position: absolute;color: '+style+';">加载中...</span></div>';
+                '<span style="margin-top: ' + top + 'px;left:' + eval(50 - (20 / width)) + '%;position: absolute;"><span class="dt_animation" style="position:relative;width:20px;height:20px;background:' + style + ';">&nbsp;&nbsp;</span></span>' +
+                '<span style="margin-top: ' + eval(top + 20) + 'px;left:' + eval(50 - (20 / width)) + '%;position: absolute;color: ' + style + ';">加载中...</span></div>';
             table.append(loading);
             var dt_animation = $(".dt_animation");
             startAnimation = function () {
@@ -656,11 +702,13 @@ var GetJSONData = {};
     function ClearTable(t) {
         t.html("");
     }
+
     /*表格数据更新-页码操作 避免页码操作产生闪烁情况 则不使用清理重建*/
     function UpdateData(Object, Table, TableID, page) {
         var columns = Object.columns;
         var pageCapacity = Object.pageCapacity;
-        $.ajax({/*根据URL拉取数据,更新表格*/
+        $.ajax({
+            /*根据URL拉取数据,更新表格*/
             type: "GET",
             url: Object.url,
             data: {
@@ -691,8 +739,13 @@ var GetJSONData = {};
                                 var ColumnContent = json[r][columns[c].ColumnName];
                                 /*生成一行一列 data-row= 为自定义标签用于识别行 */
                                 var table_td = Table.find("tr").eq(r + 1).find("." + TableID + "_td").eq(c);
-                                table_td.html(ColumnContent);
-                                table_td.attr("title", ColumnContent);
+                                if (table_td.find("img").length > 0) {/*为图片列*/
+                                    table_td.html("<img src='" + ColumnContent + "' class='img'><img src='" + ColumnContent + "' class='showImg'>");
+                                    titltImg(Table);
+                                } else {
+                                    table_td.html(ColumnContent);
+                                    table_td.attr("title", ColumnContent);
+                                }
                             }
                         }
                         var totalPage = Math.ceil(total / pageCapacity);
@@ -709,10 +762,10 @@ var GetJSONData = {};
                         /*消除设置行选中标记*/
                         Table.find("tr").find("td").css({
                             "border": "1px solid #d8d8d8",
-                            "padding":"5px"
+                            "padding": "5px"
                         });
                     } else {
-                        debug(TableID+"返回数据为空,或返回格式不正确");
+                        debug(TableID + "返回数据为空,或返回格式不正确");
                     }
                 }
             },
@@ -735,6 +788,7 @@ var GetJSONData = {};
         }
         return 0;
     }
+
     function debug(msg) {/*调试模式 错误提醒*/
         if (DebugMsg) {
             $("body").append("<div class='DataTableDebugMsg'>DataTable调试信息: <span style='color: #ff5c6f;'>" + msg + "!</span><a class='debugOut' href='javascript:void(0);'>(点我隐藏此条信息)</a></div>");
@@ -760,7 +814,7 @@ var GetJSONData = {};
             });
             debugOut.css({
                 "margin": "0 10px",
-                "text-decoration":"none"
+                "text-decoration": "none"
             });
             debugOut.click(6000, function () {
                 $(this).parent().remove();
@@ -787,7 +841,7 @@ var GetJSONData = {};
      */
     d.fn.TableRefresh = function () {
         var dt_id = d(this)[0].id;
-        $('.'+dt_id+'_refresh').click();
+        $('.' + dt_id + '_refresh').click();
     };
     /**
      * @return {null|{}}
