@@ -26,42 +26,44 @@ jquery 数据表格
 3、绑定设置
 
 ``` JavaScript
-$("#Table").dataTable({
-        debug: true,
-        check: true,
-        pageCapacity:15,
-        loading:false,
-        oddEven:false,
-        url: "data.php",
-        style: {"font-size": "12px", "width": "800px"},
-        align:"center",
-        ButtonStyle:{fontColor:"#ffffff",backgroundColor:"#10AA9C"},
-        columns: [
-            {ColumnName: "id", title: "ID", width: 30},
-	    {ColumnName: "img", img:true, title: "图片", width: 40},//设置img:true,后台数据反回url这一列就生成图片显示
-            {ColumnName: "name", title: "视频名", width: 500},
-            {title: "查看", button: "show", buttonName: "查看", width: 50},
-            {title: "编辑", button: "edit", buttonName: "编辑", width: 50},
-            {title: "删除", button: "del", buttonName: "删除", width: 50}
-        ],
-        Click: function (row) {
-            alert("单击："+row.id);
-        },
-        doubleClick: function (row) {
-            alert("双击："+row.id);
-        }
-        ,
-        editClick: function (row) {
-            alert("自定义编辑："+row.id);
-        }
-        ,
-        delClick: function (row) {
-            alert("自定义删除："+row.id);
-        },
-        showClick: function (row) {
-            alert("自定义查看："+row.name);
-        }
-    });
+
+
+        $("#Table").dataTable({
+            debug: true,
+            check: true,
+            pageCapacity:15,
+            loading:false,
+            oddEven:false,
+            url: "data.php",
+            style: {"font-size": "12px", "width": "800px"},
+            align:"center",
+            ButtonStyle:{fontColor:"#ffffff",backgroundColor:"#10AA9C"},
+            columns: [
+                {ColumnName: "id", title: "ID", width: 30},
+                {ColumnName: "img", img:true, title: "图片", width: 40},//设置img:true,后台数据反回url这一列就生成图片显示
+                {ColumnName: "name", title: "视频名", width: 500},
+                {title: "查看", button: "show", buttonName: "查看", width: 50},
+                {title: "编辑", button: "edit", buttonName: "编辑", width: 50},
+                {title: "删除", button: "del", buttonName: "删除", width: 50}
+            ],
+            Click: function (row) {
+                alert("单击："+row.id);
+            },
+            doubleClick: function (row) {
+                alert("双击："+row.id);
+            }
+            ,
+            editClick: function (row) {
+                alert("自定义编辑："+row.id);
+            }
+            ,
+            delClick: function (row) {
+                alert("自定义删除："+row.id);
+            },
+            showClick: function (row) {
+                alert("自定义查看："+row.name);
+            }
+        });
 ```
 `关于后台数据` 
 <br>
@@ -73,6 +75,7 @@ pageCapacity : 页码容量(页显示条数)
 
 ``` php
 
+<?php
     $pager = json_decode($_GET["pager"]);
     $page=$pager->page;
     $Capacity = $pager->pageCapacity;
@@ -87,6 +90,7 @@ pageCapacity : 页码容量(页显示条数)
     }
     $data = array('total' => $total, 'rows' => $rows);
 echo json_encode($data);
+?>
 ```
 Java版本(mysql)
 <br>
