@@ -8,7 +8,9 @@ jquery 数据表格
 
 ![](https://poppinrubo.github.io/jquery.dataTable/images/125202_2Po2_2939922.png)  
 
-`使用方法` <br>
+`使用方法` 
+<br>
+<br>
 1、引入JQ及dataTable插件
 ``` html
 
@@ -60,7 +62,9 @@ $("#Table").dataTable({
         }
     });
 ```
-`关于后台数据` <br>
+`关于后台数据` 
+<br>
+<br>
 后台需配合插件做分页设置，插件会用get方式发送为pager的json字符串对象,后台需要解析该字符串为对象，该对象为
 page : 页码
 pageCapacity : 页码容量(页显示条数)
@@ -83,7 +87,9 @@ pageCapacity : 页码容量(页显示条数)
     $data = array('total' => $total, 'rows' => $rows);
 echo json_encode($data);
 ```
-Java版本(mysql)<br>
+Java版本(mysql)
+<br>
+<br>
 ``` java
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -139,5 +145,83 @@ Java版本(mysql)<br>
   ]
 }
 ```
+`获取返回数据的使用方法`
+<br>
+<br>
+``` JavaScript
 
+$('#Table').GetJSONArray();//获取Table通过URL获取到的数据，为数组类型的数据集
+$('#Table').GetCheckArray();//获取当前复选框选中的值，为数组类型的数据集,未选择获取到null
+```
+`刷新表格数据`
+<br>
+<br>
+``` JavaScript
+
+$('#Table').TableRefresh();
+//通过table绑定调用可以刷新当前表格数据，
+//效果相当于点击了一下刷新按钮，
+//要说明的是数据无变化并且没有开启loading，看着没变化并不是坏掉了
+```
+`通过url实现搜索功能`
+<br>
+<br>
+``` JavaScript
+
+//如果绑定的URL为url: "data.php",则可以通过以下方式来设置,然后后台对URL的get请求参数的处理进行表格的搜索查询
+$("#Table").dataTable({
+    url: "data.php?name=查询"
+})
+//注意事项:需要考虑到IE浏览器的情况搜索中文需要使用encodeURI进行编码,避免传到后台乱码无法查询，则使用以下方式
+$("#Table").dataTable({
+    url: "data.php?name="+encodeURI("查询")
+})
+```
+搜索功能拉取数据PHP参考代码
+<br>
+``` php
+
+<?php
+function D()
+{
+    include_once('class/DB.php');
+    $DB = new DB();
+    return $DB;
+}
+
+function getList()
+{/*拉取列表*/
+    $DB = D();
+    $pager = json_decode($_GET["pager"]);
+    $page = $pager->page;
+    $Capacity = $pager->pageCapacity;
+    $Query = $_GET["search"];
+    $List = $DB->order('AmountID asc')->limit($page, $Capacity)->select('statistics');/*常规查询*/
+    $total = $DB->count('statistics');
+    if ($Query != null && $Query != "") {/*搜索内容不为空则采取模糊查询*/
+        $total = $DB->where("material like '%$Query%'")->count('statistics');
+        $List = $DB->order('AmountID desc')->where("material like '%$Query%'")->limit($page, $Capacity)->select('statistics');
+        if (is_numeric($Query)) {/*实现ID查询判断是否为数字*/
+            $total = $DB->where(array("AmountID" => $Query))->count('statistics');
+            $List = $DB->order('AmountID asc')->where(array("AmountID" => $Query))->limit($page, $Capacity)->select('statistics');
+        }
+    }
+    $rows = array();
+    foreach ($List as $ListRow) {
+        $rows[] = array(
+            'id' => $ListRow['AmountID'],
+            'ip' => $ListRow['ip'],
+            'material' => $ListRow['material']==null?"无":$ListRow['material'],
+            'time' => $ListRow['PlayData'],
+        );
+    }
+   returnData(array('total' => $total, 'rows' => $rows));
+}
+function returnData($data)
+{/*返回数据*/
+    echo json_encode($data);
+}
+getList();
+?>
+```
 ### [查看demo](http://120.24.216.26/dataTable/ "查看demo")
