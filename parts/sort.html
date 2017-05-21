@@ -12,7 +12,7 @@
         for (var i = 0; i < array.length; i++) {
             for (var j = i + 1; j < array.length; j++) {
                 if (order == "asc") {
-                    if (array[i][param] < array[j][param]) {//数字从小到大
+                    if (array[i][param] > array[j][param]) {//数字从小到大
                         var tmp = array[i];
                         array[i] = array[j];
                         array[j] = tmp;
