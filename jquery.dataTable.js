@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-/* dataTable 版本号1.2.0 */
+/* dataTable 版本号1.2.1 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -237,7 +237,7 @@ var GetJSONData = {};
                         var img = Object.columns[c]["img"];
                         /*是否设置为图片显示*/
                         if (!empty(img) && img) {/*这一列为图片列*/
-                            Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "'><img src='" + ColumnContent + "' class='img'><img src='" + ColumnContent + "' class='showImg'></td>");
+                            Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "'><img src='" + ColumnContent + "' class='img'><span class='showImgBox'><img src='" + ColumnContent + "' class='showImg'></span></td>");
                         } else {
                             Table.find("tr").eq(r + 1).append("<td class='" + TableID + "_td' data-row='" + parseInt(r + 2) + "' title='" + ColumnTitle + "'>" + ColumnContent + "</td>");
                         }
@@ -568,16 +568,21 @@ var GetJSONData = {};
             "height": "40px",
             "margin": "0 0 -5px 0"
         });
-        Table.find(".showImg").css({
-            /*大图显示title设置*/
+        Table.find(".showImgBox").css({
+            /*大图显示title容器设置*/
             "position": "absolute",
             "z-index": 1000,
             "display": "none",
-            "width": "auto",
-            "height": "auto",
+            "margin": "0 0 0 40px",
+            "padding": "10px",
+            "background": "#FFFFFF",
+            "border-radius": "3px",
+            "box-shadow": "rgba(153, 153, 153, 0.3) 0px 0px 0px 1px"
+        });
+        Table.find(".showImg").css({
+            /*大图显示title设置*/
             "max-width": "500px",
-            "max-height": "500px",
-            "margin": "0 0 0 40px"
+            "max-height": "500px"
         });
         /*大图显示title显示设置*/
         var showImg = Table.find(".img");
@@ -740,7 +745,7 @@ var GetJSONData = {};
                                 /*生成一行一列 data-row= 为自定义标签用于识别行 */
                                 var table_td = Table.find("tr").eq(r + 1).find("." + TableID + "_td").eq(c);
                                 if (table_td.find("img").length > 0) {/*为图片列*/
-                                    table_td.html("<img src='" + ColumnContent + "' class='img'><img src='" + ColumnContent + "' class='showImg'>");
+                                    table_td.html("<img src='" + ColumnContent + "' class='img'><span class='showImgBox'><img src='" + ColumnContent + "' class='showImg'></span>");
                                     titltImg(Table);
                                 } else {
                                     table_td.html(ColumnContent);
