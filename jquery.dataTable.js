@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-/* dataTable 版本号1.2.1 */
+/* dataTable 版本号1.2.5 */
 ///////////////////////////////////////
 
 /*使用之前记得要引入JQ库*/
@@ -573,7 +573,6 @@ var GetJSONData = {};
             "position": "absolute",
             "z-index": 1000,
             "display": "none",
-            "margin": "0 0 0 40px",
             "padding": "10px",
             "background": "#FFFFFF",
             "border-radius": "3px",
@@ -581,15 +580,31 @@ var GetJSONData = {};
         });
         Table.find(".showImg").css({
             /*大图显示title设置*/
-            "max-width": "500px",
-            "max-height": "500px"
+            "max-width": "300px"
         });
         /*大图显示title显示设置*/
         var showImg = Table.find(".img");
         showImg.hover(function () {
-            this.nextSibling.style.display = "block";
+            var imgBox = $(this).next(),
+                marginTop = 0,
+                marginLeft = 40,
+                tableHeight = Table.height(),
+                tableWidth = Table.width(),
+                imgBoxHeight = imgBox.height(),
+                imgBoxWidth = imgBox.width(),
+                trTop = $(this).parent().parent().position().top,
+                tdLeft = $(this).parent().position().left;
+
+            if (tableHeight - trTop - imgBoxHeight < 35) {/*计算上下距离调整显示位置*/
+                marginTop = -eval(imgBoxHeight + 60);
+            }
+            if (tableWidth - tdLeft - imgBoxWidth < 0) {/*计算左右距离调整显示位置*/
+                marginLeft = -eval(imgBoxWidth + 20);
+            }
+            imgBox.css({"margin": marginTop + "px 0 0 " + marginLeft + "px", "display": "block"});
+            window.console.log(tableWidth - tdLeft - imgBoxWidth);
         }, function () {
-            this.nextSibling.style.display = "none";
+            $(this).next().css({"display": "none"});
         });
     }
 
