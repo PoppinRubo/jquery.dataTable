@@ -41,12 +41,10 @@ jquery 数据表格
             columns: [
                 {ColumnName: "id", title: "ID", width: 30},
                 {ColumnName: "name", title: "视频名", width: 500},
-				//下面设置img:true,后台数据反回图片url这一列就生成图片显示
-                {ColumnName: "img", img:true, title: "图片", width: 40},
-				//下面为自定义的按钮
-                {title: "查看", button: "show", buttonName: "查看", width: 50},
-                {title: "编辑", button: "edit", buttonName: "编辑", width: 50},
-                {title: "删除", button: "del", buttonName: "删除", width: 50}
+                {ColumnName: "img", img:true, title: "图片", width: 40},//img:true,后台数据反回图片url这一列就生成图片显示
+                {title: "查看", button: "show", buttonName: "查看", width: 50},//自定义的按钮
+                {title: "编辑", button: "edit", buttonName: "编辑", width: 50},//自定义的按钮
+                {title: "删除", button: "del", buttonName: "删除", width: 50}//自定义的按钮
             ],
             Click: function (row) {//内置事件行单击
                 alert("单击："+row.id);
