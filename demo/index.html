@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataTable插件,demo</title>
+    <style type="text/css">
+        p{
+            width: 100%;
+            height: 30px;
+            font-family: "微软雅黑",serif;
+            font-size: 14px;
+            text-align: center;
+            color: #000000;
+        }
+        header{
+            position:absolute;
+            margin: 0;
+            top:0;
+            left:0;
+            width: 100%;
+            height: 50px;
+            background: #f2f2f2;
+        }
+        header datatable{
+            height: 100%;
+            line-height: 50px;
+            margin: 0 30px;
+            font-family: "Microsoft YaHei", "微软雅黑", helvetica, arial, verdana, tahoma, sans-serif;
+            font-size: 24px;
+        }
+        #Table{
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <datatable>
+        DataTable
+    </datatable>
+</header>
+<button class="button button-primary button-pill button-small" onclick="alert( JSON.stringify($('#Table').GetJSONArray()));" style="position: relative;left: 0;top:80px;">获取表格当页数据</button>
+<div style="position: relative;margin: 10px auto;width:850px;height: 500px;overflow-y:auto;overflow-x:hidden;">
+    <table id="Table"></table>
+</div>
+</body>
+<script type="text/javascript" src="../jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../jquery.dataTable.js"></script>
+<script type="text/javascript">
+    $("#Table").dataTable({
+        debug: true,
+        check: false,
+        pageCapacity:15,
+        loading:true,
+        sign:true,
+        url: "data.json",
+        style: {"font-size": "12px", "width": "800px"},
+        align:"center",
+        ButtonStyle:{fontColor:"#ffffff",backgroundColor:"#10AA9C"},
+        columns: [
+            {ColumnName: "id", title: "ID", width: 30},
+            {ColumnName: "ip", title: "IP地址", width: 80},
+            {ColumnName: "material", title: "IP信息", width: 300},
+            {ColumnName: "time", title: "时间", width: 120},
+            {title: "查看", button: "custom", buttonName: "查看", width: 50},
+            {title: "编辑", button: "edit", buttonName: "编辑", width: 50},
+            {title: "删除", button: "del", buttonName: "删除", width: 50}
+        ],
+        editClick: function (row) {
+            alert("表格1 编辑：ip "+row.ip);
+        }
+        ,
+        delClick: function (row) {
+            alert("表格1 删除：ip "+row.ip);
+        },
+        customClick: function (row) {
+            alert("表格1 自定义：查看 "+row.ip);
+        }
+    });
+</script>
+</html>
