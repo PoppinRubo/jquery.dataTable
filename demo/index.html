@@ -29,9 +29,6 @@
             font-family: "Microsoft YaHei", "微软雅黑", helvetica, arial, verdana, tahoma, sans-serif;
             font-size: 24px;
         }
-        #Table{
-            margin-top: 100px;
-        }
     </style>
 </head>
 <body>
@@ -41,7 +38,7 @@
     </datatable>
 </header>
 <button class="button button-primary button-pill button-small" onclick="alert( JSON.stringify($('#Table').GetJSONArray()));" style="position: relative;left: 0;top:80px;">获取表格当页数据</button>
-<div style="position: relative;margin: 10px auto;width:850px;height: 500px;overflow-y:auto;overflow-x:hidden;">
+<div style="position: relative;margin: 30px auto 0 auto;width:850px;height: 500px;overflow-y:auto;overflow-x:hidden;">
     <table id="Table"></table>
 </div>
 </body>
@@ -67,15 +64,21 @@
             {title: "编辑", button: "edit", buttonName: "编辑", width: 50},
             {title: "删除", button: "del", buttonName: "删除", width: 50}
         ],
+        Click: function (row) {
+            alert("单击："+row.id);
+        },
+        doubleClick: function (row) {
+            alert("双击："+row.id);
+        },
         editClick: function (row) {
-            alert("表格1 编辑：ip "+row.ip);
+            alert("点击了编辑：ID "+row.id);
         }
         ,
         delClick: function (row) {
-            alert("表格1 删除：ip "+row.ip);
+            alert("点击了删除：ID "+row.id);
         },
         customClick: function (row) {
-            alert("表格1 自定义：查看 "+row.ip);
+            alert("点击了查看: ID "+row.id);
         }
     });
 </script>
