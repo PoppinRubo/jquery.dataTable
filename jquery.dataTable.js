@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-/* dataTable 版本号1.2.6 */
+/* dataTable 版本号1.2.7 */
 ///////////////////////////////////////
 
 /*选择行对象 对于复选框 外部可访问*/
@@ -33,7 +33,7 @@ var GetJSONData = {};
                 /*table 设置储存 写入记录*/
                 TableSet[TableID] = {Object: Object, Table: Table};
             }
-            /*启用历史 设置 更新url*/
+            /*启用历史，设置更新url*/
             TableSet[TableID].Object.url = Object.url;
             /*默认使用get方式请求如果设置使用设置方式，请求远程数据的方法(method)类型*/
             if (!empty(Object.method)) {
@@ -42,7 +42,13 @@ var GetJSONData = {};
             } else {
                 TableSet[TableID].Object.method = "GET";
             }
-            /*页 容量 设置默认为10*/
+            /*表格序号，默认生成序号*/
+            if (!empty(Object.serial)) {
+                TableSet[TableID].Object.serial = Object.serial;
+            } else {
+                TableSet[TableID].Object.serial = true;
+            }
+            /*页容量，设置默认为10*/
             var pageCapacity = 10;
             if (!empty(Object.pageCapacity)) {
                 TableSet[TableID].Object.pageCapacity = Object.pageCapacity;
@@ -83,6 +89,11 @@ var GetJSONData = {};
                 }
                 /*插入表头列*/
                 Table.find("tr").eq(0).append("<td class='" + TableID + "_td_head' style='width:" + width + ";'>" + columns[h]['title'] + "</td>");
+            }
+            if (!empty(Object.serial)) {/*检查是否开启序号,生成表头*/
+                if (Object.serial) {
+                    Table.find("tr").eq(0).prepend("<td class='" + TableID + "_td' title='序号' style='width:25px'>序号</td>");
+                }
             }
             if (!empty(Object.check)) {/*检查是否开启复选框 生成表头*/
                 if (Object.check) {
@@ -249,7 +260,12 @@ var GetJSONData = {};
                         }
 
                     }
-                    if (!empty(Object.check)) {/*检查是否开启复选框 绑定行*/
+                    if (!empty(Object.serial)) {/*检查是否开启序号,设置行号*/
+                        if (Object.serial) {
+                            Table.find("tr").eq(r + 1).prepend("<td class='" + TableID + "_td'>" + eval(r + 1) + "</td>");
+                        }
+                    }
+                    if (!empty(Object.check)) {/*检查是否开启复选框，绑定行*/
                         if (Object.check) {
                             Table.find("tr").eq(r + 1).prepend("<td class='" + TableID + "_td_checkbox'><input class='" + TableID + "_dt_checkbox' type='checkbox'></td>");
                         }

@@ -20,10 +20,15 @@ jquery 数据表格
         <td>是否开启调试模式，默认关闭</td>
         <td>可选,bool类型，false-true</td>
     </tr>
-	    <tr>
+	<tr>
         <td colspan="2">method</td>
         <td>发送数据请求的方式，默认使用GET方式请求</td>
         <td>可选,string类型，get-post</td>
+    </tr>
+	<tr>
+        <td colspan="2">serial</td>
+        <td>是否生成行号，默认生成行号</td>
+        <td>可选,bool类型，false-true</td>
     </tr>
     <tr>
         <td colspan="2">check</td>
