@@ -120,8 +120,7 @@ jquery 数据表格
 </table>
 
 `使用方法` 
-<br>
-<br>
+<br><br>
 1、引入JQ及dataTable插件
 ``` html
 
@@ -299,16 +298,10 @@ $("#Table").dataTable({
 ``` php
 
 <?php
-function D()
-{
-    include_once('class/DB.php');
-    $DB = new DB();
-    return $DB;
-}
-
 function getList()
 {/*拉取列表*/
-    $DB = D();
+    include_once('class/DB.php');
+    $DB = new DB();
     $pager = json_decode($_GET["pager"]);
     $page = $pager->page;
     $Capacity = $pager->pageCapacity;
@@ -332,11 +325,8 @@ function getList()
             'time' => $ListRow['PlayData'],
         );
     }
-   returnData(array('total' => $total, 'rows' => $rows));
-}
-function returnData($data)
-{/*返回数据*/
-    echo json_encode($data);
+    //返回数据
+    echo json_encode(array('total' => $total, 'rows' => $rows));
 }
 getList();
 ?>
