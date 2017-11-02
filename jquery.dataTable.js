@@ -262,7 +262,7 @@ var GetJSONData = {};
                     }
                     if (!empty(Object.serial)) {/*检查是否开启序号,设置行序号*/
                         if (Object.serial) {
-                            Table.find("tr").eq(r + 1).prepend("<td class='" + TableID + "_td_serial' title='序号 " + eval(r + 1) + "'>" + eval(r + 1) + "</td>");
+                            Table.find("tr").eq(r + 1).prepend("<td class='" + TableID + "_td_serial' data-row='" + parseInt(r + 2) + "' title='序号 " + eval(r + 1) + "'>" + eval(r + 1) + "</td>");
                         }
                     }
                     if (!empty(Object.check)) {/*检查是否开启复选框，绑定行*/
@@ -517,15 +517,22 @@ var GetJSONData = {};
                     sign = Object.sign;
                 }
                 if (sign) {
-                    Table.find("." + TableID + "_td").click(function (ev) {/*单击事件方法设置选中行标识,行用td设置*/
-                        if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {
+                    /*单击事件方法设置选中行标识,行用td设置*/
+                    Table.find("." + TableID + "_td").click(function (ev) {
+                        signEv(ev, this, $(this));
+                    });
+                    Table.find("." + TableID + "_td_serial").click(function (ev) {/*序号*/
+                        signEv(ev, this, $(this));
+                    });
+                    function signEv(ev, t, T) {
+                        if (ev.target === t && t.parentNode.className != TableID + "_dt_head") {
                             /*初始化*/
                             Table.find("tr").find("td").css({
                                 "border": "1px solid #d8d8d8",
                                 "padding": "5px"
                             });
                             /*设置选中标记开始*/
-                            var firstChildren = $(this).parent().children(":first");
+                            var firstChildren = T.parent().children(":first");
                             /*默认风格*/
                             var style = "#232323";
                             /*检查是否设置风格*/
@@ -538,18 +545,22 @@ var GetJSONData = {};
                             });
                             /*设置选中标记结束*/
                         }
-                    });
+                    }
                 }
 
                 /*定义setTimeout执行方法 解决单击双击冲突*/
                 var TimeFn = null;
-                Table.find("." + TableID + "_td").click(function (ev) {/*单击事件方法*/
+                Table.find("." + TableID + "_td").click(function (ev) {/*单击事件方法，普通行*/
+                    clickEv(ev, this);
+                });
+                Table.find("." + TableID + "_td_serial").click(function (ev) {/*单击事件方法，序号行*/
+                    clickEv(ev, this);
+                });
+                function clickEv(ev, t) {
                     if (empty(Object.Click)) {
                         /*未开启单击*/
                         return;
                     }
-                    /*把它先储存 避免与setTimeout错乱*/
-                    var t = this;
                     clearTimeout(TimeFn);
                     /*执行延时*/
                     TimeFn = setTimeout(function () {
@@ -559,9 +570,15 @@ var GetJSONData = {};
                             Object.Click(data);
                         }
                     }, 300);
+                }
 
+                Table.find("." + TableID + "_td").dblclick(function (ev) {/*双击事件方法,普通行*/
+                    dblclickEv(ev, this);
                 });
-                Table.find("." + TableID + "_td").dblclick(function (ev) {/*双击事件方法*/
+                Table.find("." + TableID + "_td_serial").dblclick(function (ev) {/*双击事件方法，序号行*/
+                    dblclickEv(ev, this);
+                });
+                function dblclickEv(ev, t) {
                     if (empty(Object.doubleClick)) {
                         /*未开启双击*/
                         return;
@@ -569,12 +586,13 @@ var GetJSONData = {};
                     /*取消上次延时未执行的方法*/
                     clearTimeout(TimeFn);
                     /*双击事件的执行代码*/
-                    if (ev.target === this && this.parentNode.className != TableID + "_dt_head") {
-                        var data = GetClickRowData(this, 2, TableID);
+                    if (ev.target === t && t.parentNode.className != TableID + "_dt_head") {
+                        var data = GetClickRowData(t, 2, TableID);
                         /*获取绑定 参数数据 点击行*/
                         Object.doubleClick(data);
                     }
-                });
+                }
+
                 /*******事件方法 结束*******/
             }
         }
