@@ -65,43 +65,28 @@ jquery 数据表格
         <td>行选中标记，开启后点击行选中显示标记,风格与ButtonStyle的backgroundColor一致，默认开启</td>
         <td>可选,bool类型，false-true</td>
     </tr>	
-    <tr>
-        <td rowspan="5" style="padding: 0;">
-            <table border="1" style="border-collapse:collapse;margin: 0">
-                <tr>
-                    <td rowspan="6" style="border: none;border-right:solid 1px #a0c6e5;">columns</td>
-                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">ColumnName</td>
-                </tr>
-                <tr>
-                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">title</td>
-                </tr>
-                <tr>
-                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">width</td>
-                </tr>
-                <tr>
-                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">button</td>
-                </tr>
-                <tr>
-                    <td style="border: none;">buttonName</td>
-                </tr>
-            </table>
-        </td>
+    <tr>	    
+	<td>ColumnName</td>
         <td>绑定的字段名，必须与返回数据字段对应，自定义列可不设置该属性</td>
         <td>非按钮列必选，string类型</td>
     </tr>
     <tr>
+	<td>title</td>
         <td>显示的表头列名</td>
         <td>必选，string类型</td>
     </tr>
     <tr>
+    	<td>width</td>
         <td>列宽</td>
         <td>可选，int 正整数</td>
     </tr>
     <tr>
+    	<td>button</td>
         <td>自定义按钮功能列，设置按钮名为此按钮标识，自定义列可必选设置该属性，自定义按钮列不需设置ColumnName</td>
         <td>按钮列必选，string类型,英文(与事件绑定)</td>
     </tr>
     <tr>
+    	<td>buttonName</td>
         <td>自定义按钮功能列,显示的按钮名，自定义列可必选设置该属性，自定义按钮列不需设置ColumnName</td>
         <td>按钮列必选，string类型</td>
     </tr>
