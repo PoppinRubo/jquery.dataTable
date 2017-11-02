@@ -27,7 +27,7 @@ jquery 数据表格
     </tr>
 	<tr>
         <td colspan="2">serial</td>
-        <td>是否生成行号，默认生成行号</td>
+        <td>表格是否生成序号，默认生成序号</td>
         <td>可选,bool类型，false-true</td>
     </tr>
     <tr>
