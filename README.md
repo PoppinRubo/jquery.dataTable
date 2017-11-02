@@ -11,61 +11,62 @@ jquery 数据表格
 <br>
 <table>
     <tr>
-        <td>配置项</td>
+        <td colspan="2">配置项</td>
         <td>说明</td>
         <td>选项</td>
     </tr>
     <tr>
-        <td>debug</td>
+        <td colspan="2">debug</td>
         <td>是否开启调试模式，默认关闭</td>
         <td>可选,,bool类型，false-true</td>
     </tr>
     <tr>
-        <td>check</td>
+        <td colspan="2">check</td>
         <td>行是否开启复选框,默认关闭</td>
         <td>可选,bool类型，false-true</td>
     </tr>
     <tr>
-        <td>pageCapacity</td>
+        <td colspan="2">pageCapacity</td>
         <td>页码容量，一页显示数据的条数，默认为10行</td>
         <td>可选，int 正整数</td>
     </tr>
     <tr>
-        <td>loading</td>
+        <td colspan="2">loading</td>
         <td>是否显示加载动画，默认加载</td>
         <td>可选,bool类型，false-true</td>
     </tr>
     <tr>
-        <td>url</td>
+        <td colspan="2">url</td>
         <td>返回数据的URL地址,返回数据为json格式，不填写只能生成表头</td>
         <td>必选,string类型</td>
     </tr>
     <tr>
-        <td>style</td>
+        <td colspan="2">style</td>
         <td>table样式设置,可自行编写css样式，多项，格式{"font-size": "12px", "width": "800px"}</td>
         <td>可选,object类型</td>
     </tr>
     <tr>
-        <td>align</td>
+        <td colspan="2">align</td>
         <td>内容停靠方向,默认靠向左</td>
         <td>可选，string类型center , left , right</td>
     </tr>
     <tr>
-        <td>ButtonStyle</td>
+        <td colspan="2">ButtonStyle</td>
         <td>按钮部件风格，按钮背景色与字体颜色，两项,格式{fontColor:"#ffffff",backgroundColor:"#10AA9C"}，默认黑色</td>
         <td>可选,object类型</td>
     </tr>
     <tr>
-        <td>oddEven</td>
+        <td colspan="2">oddEven</td>
         <td>奇偶行样式，开启后显示样式区别奇偶行,默认开启</td>
         <td>可选,bool类型，false-true</td>
     </tr>
     <tr>
-        <td>sign</td>
+        <td colspan="2">sign</td>
         <td>行选中标记，开启后点击行选中显示标记,风格与ButtonStyle的backgroundColor一致，默认开启</td>
         <td>可选,bool类型，false-true</td>
     </tr>	
-    <tr>	    
+    <tr>	
+	<td rowspan="5">columns</td>
 	<td>ColumnName</td>
         <td>绑定的字段名，必须与返回数据字段对应，自定义列可不设置该属性</td>
         <td>非按钮列必选，string类型</td>
