@@ -799,23 +799,23 @@ var GetJSONData = {};
                                 var ColumnContent = json[r][columns[c].ColumnName];
                                 /*生成一行一列 data-row= 为自定义标签用于识别行 */
                                 var table_td = Table.find("tr").eq(r + 1).find("." + TableID + "_td").eq(c);
+                                if (!empty(Object.serial)) {/*检查是否开启序号,更新行序号*/
+                                    if (Object.serial) {
+                                        var td_serial = Table.find("tr").eq(r + 1).find("." + TableID + "_td_serial").eq(c);
+                                        /*在第一页按数组索引输出序号,不在则处理数据输出序号*/
+                                        if (page == 1) {
+                                            td_serial.html(r + 1);
+                                            td_serial.attr("title", "序号 " + eval(r + 1));
+                                        } else {
+                                            td_serial.html(pageCapacity * (page - 1) + eval(r + 1));
+                                            td_serial.attr("title", "序号 " + eval(pageCapacity * (page - 1) + eval(r + 1)));
+                                        }
+                                    }
+                                }
                                 if (table_td.find("img").length > 0) {/*为图片列*/
                                     table_td.html("<img src='" + ColumnContent + "' class='img'><span class='showImgBox'><img src='" + ColumnContent + "' class='showImg'></span>");
                                     titltImg(Table);
                                 } else {
-                                    if (!empty(Object.serial)) {/*检查是否开启序号,更新行序号*/
-                                        if (Object.serial) {
-                                            var td_serial = Table.find("tr").eq(r + 1).find("." + TableID + "_td_serial").eq(c);
-                                            /*在第一页按数组索引输出序号,不在则处理数据输出序号*/
-                                            if (page == 1) {
-                                                td_serial.html(r + 1);
-                                                td_serial.attr("title", "序号 " + eval(r + 1));
-                                            } else {
-                                                td_serial.html(pageCapacity * (page - 1) + eval(r + 1));
-                                                td_serial.attr("title", "序号 " + eval(pageCapacity * (page - 1) + eval(r + 1)));
-                                            }
-                                        }
-                                    }
                                     table_td.html(ColumnContent);
                                     table_td.attr("title", ColumnContent);
                                 }
@@ -928,4 +928,3 @@ var GetJSONData = {};
     };
     /*上面是外部绑定 调用获取参数*/
 })(jQuery);
-
