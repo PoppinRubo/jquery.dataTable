@@ -1,8 +1,7 @@
 ///////////////////////////////////////
-/* dataTable 版本号1.2.5 */
+/* dataTable 版本号1.2.6 */
 ///////////////////////////////////////
 
-/*使用之前记得要引入JQ库*/
 /*选择行对象 对于复选框 外部可访问*/
 var CheckData = {};
 /*url返回的数据用于取出行数据*/
@@ -36,6 +35,13 @@ var GetJSONData = {};
             }
             /*启用历史 设置 更新url*/
             TableSet[TableID].Object.url = Object.url;
+            /*默认使用get方式请求如果设置使用设置方式，请求远程数据的方法(method)类型*/
+            if (!empty(Object.method)) {
+                var method = Object.method.toUpperCase();
+                TableSet[TableID].Object.method = method;
+            } else {
+                TableSet[TableID].Object.method = "GET";
+            }
             /*页 容量 设置默认为10*/
             var pageCapacity = 10;
             if (!empty(Object.pageCapacity)) {
@@ -174,7 +180,7 @@ var GetJSONData = {};
             }
             $.ajax({
                 /*根据URL拉取数据,初次拉取创建*/
-                type: "GET",
+                type: Object.method,
                 url: url,
                 data: {
                     pager: JSON.stringify({
@@ -729,7 +735,7 @@ var GetJSONData = {};
         var pageCapacity = Object.pageCapacity;
         $.ajax({
             /*根据URL拉取数据,更新表格*/
-            type: "GET",
+            type: Object.method,
             url: Object.url,
             data: {
                 pager: JSON.stringify({

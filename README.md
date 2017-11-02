@@ -18,7 +18,12 @@ jquery 数据表格
     <tr>
         <td colspan="2">debug</td>
         <td>是否开启调试模式，默认关闭</td>
-        <td>可选,,bool类型，false-true</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+	    <tr>
+        <td colspan="2">method</td>
+        <td>发送数据请求的方式，默认使用GET方式请求</td>
+        <td>可选,string类型，get-post</td>
     </tr>
     <tr>
         <td colspan="2">check</td>
@@ -203,7 +208,7 @@ jquery 数据表格
   ]
 }
 ```
-后台需配合插件做分页设置，插件会用get方式发送为pager的json字符串对象,后台需要解析该字符串为对象。
+后台需配合插件做分页设置，插件默认使用GET方式(可以设置为POST)发送为pager的json字符串对象,后台需要解析该字符串为对象。
 </br>该对象属性为 page : 页码,pageCapacity : 页码容量(页显示条数)
 
 参照PHP版本可解析到对象,并处理输出
