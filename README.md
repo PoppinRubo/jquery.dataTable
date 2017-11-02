@@ -178,6 +178,31 @@ jquery 数据表格
 `关于后台数据` 
 <br>
 <br>
+返回的json格式(total:数据总条数,并非页数)
+``` JavaScript
+
+{
+  "total": 3744,
+  "rows": [
+    {
+      "id": 3832,
+      "name": "Haeni Kim- Falling For Someone New - Kuma"
+    },
+    {
+      "id": 3831,
+      "name": "Top Moments- A Friday Night vol. 100 (Korea)"
+    },
+    {
+      "id": 3830,
+      "name": "WAACKXXY Waacking 2017"
+    },
+    {
+      "id": 3829,
+      "name": "TRIX a.k.a. EYE X Krump 2017"
+    }
+  ]
+}
+```
 后台需配合插件做分页设置，插件会用get方式发送为pager的json字符串对象,后台需要解析该字符串为对象，该对象为
 page : 页码
 pageCapacity : 页码容量(页显示条数)
@@ -235,31 +260,7 @@ Java版本(mysql)
 以上示例仅供参考,不建议直接使用在项目。对于分页可自行封装
 <br>
 <br>
-返回的json格式(total:数据总条数,并非页数)
-``` JavaScript
 
-{
-  "total": 3744,
-  "rows": [
-    {
-      "id": 3832,
-      "name": "Haeni Kim- Falling For Someone New - Kuma"
-    },
-    {
-      "id": 3831,
-      "name": "Top Moments- A Friday Night vol. 100 (Korea)"
-    },
-    {
-      "id": 3830,
-      "name": "WAACKXXY Waacking 2017"
-    },
-    {
-      "id": 3829,
-      "name": "TRIX a.k.a. EYE X Krump 2017"
-    }
-  ]
-}
-```
 `获取返回数据的使用方法`
 <br>
 <br>
