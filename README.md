@@ -2,11 +2,136 @@ jquery.dataTable
 -------------
 jquery 数据表格
 
-[配置项详情](https://poppinrubo.github.io/jquery.dataTable/ "查看配置项")
-
 ![](https://poppinrubo.github.io/jquery.dataTable/images/125055_CqBH_2939922.png)  
 
 ![](https://poppinrubo.github.io/jquery.dataTable/images/125202_2Po2_2939922.png)  
+
+`dataTable` [配置项](https://poppinrubo.github.io/jquery.dataTable/ "新页面查看配置项")
+<br>
+<br>
+<table>
+    <tr>
+        <td>配置项</td>
+        <td>说明</td>
+        <td>选项</td>
+    </tr>
+    <tr>
+        <td>debug</td>
+        <td>是否开启调试模式，默认关闭</td>
+        <td>可选,,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>check</td>
+        <td>行是否开启复选框,默认关闭</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>pageCapacity</td>
+        <td>页码容量，一页显示数据的条数，默认为10行</td>
+        <td>可选，int 正整数</td>
+    </tr>
+    <tr>
+        <td>loading</td>
+        <td>是否显示加载动画，默认加载</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>url</td>
+        <td>返回数据的URL地址,返回数据为json格式，不填写只能生成表头</td>
+        <td>必选,string类型</td>
+    </tr>
+    <tr>
+        <td>style</td>
+        <td>table样式设置,可自行编写css样式，多项，格式{"font-size": "12px", "width": "800px"}</td>
+        <td>可选,object类型</td>
+    </tr>
+    <tr>
+        <td>align</td>
+        <td>内容停靠方向,默认靠向左</td>
+        <td>可选，string类型center , left , right</td>
+    </tr>
+    <tr>
+        <td>ButtonStyle</td>
+        <td>按钮部件风格，按钮背景色与字体颜色，两项,格式{fontColor:"#ffffff",backgroundColor:"#10AA9C"}，默认黑色</td>
+        <td>可选,object类型</td>
+    </tr>
+    <tr>
+        <td>oddEven</td>
+        <td>奇偶行样式，开启后显示样式区别奇偶行,默认开启</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>
+    <tr>
+        <td>sign</td>
+        <td>行选中标记，开启后点击行选中显示标记,风格与ButtonStyle的backgroundColor一致，默认开启</td>
+        <td>可选,bool类型，false-true</td>
+    </tr>	
+    <tr>
+        <td rowspan="5" style="padding: 0;">
+            <table border="1" style="border-collapse:collapse;margin: 0">
+                <tr>
+                    <td rowspan="6" style="border: none;border-right:solid 1px #a0c6e5;">columns</td>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">ColumnName</td>
+                </tr>
+                <tr>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">title</td>
+                </tr>
+                <tr>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">width</td>
+                </tr>
+                <tr>
+                    <td style="border: none;border-bottom:solid 1px #a0c6e5;">button</td>
+                </tr>
+                <tr>
+                    <td style="border: none;">buttonName</td>
+                </tr>
+            </table>
+        </td>
+        <td>绑定的字段名，必须与返回数据字段对应，自定义列可不设置该属性</td>
+        <td>非按钮列必选，string类型</td>
+    </tr>
+    <tr>
+        <td>显示的表头列名</td>
+        <td>必选，string类型</td>
+    </tr>
+    <tr>
+        <td>列宽</td>
+        <td>可选，int 正整数</td>
+    </tr>
+    <tr>
+        <td>自定义按钮功能列，设置按钮名为此按钮标识，自定义列可必选设置该属性，自定义按钮列不需设置ColumnName</td>
+        <td>按钮列必选，string类型,英文(与事件绑定)</td>
+    </tr>
+    <tr>
+        <td>自定义按钮功能列,显示的按钮名，自定义列可必选设置该属性，自定义按钮列不需设置ColumnName</td>
+        <td>按钮列必选，string类型</td>
+    </tr>
+</table>
+
+`dataTable事件` 
+<br>
+<br>
+<table>
+    <tr>
+        <td>事件名</td>
+        <td>说明</td>
+        <td>使用方法</td>
+    </tr>
+    <tr>
+        <td>Click</td>
+        <td>行单击事件,返回该行数据</td>
+        <td>Click: function (row){alert(row.id);}使用row.返回数据字段可获得数据,列未显示也可获得数据</td>
+    </tr>
+    <tr>
+        <td>doubleClick</td>
+        <td>行双击击事件，返回该行数据，该双击事件不触发单击事件</td>
+        <td>设置doubleClick: function (row){alert(row.id);}使用row.返回数据字段可获得数据,列未显示也可获得数据</td>
+    </tr>
+    <tr>
+        <td>自定义Click</td>
+        <td>点击按钮，返回该行数据,设置的button为del 则事件为delClick</td>
+        <td>设置 自定义Click:function (row) {alert(row.id);} 与双击单击事件用法一致</td>
+    </tr>
+</table>
 
 `使用方法` 
 <br>
