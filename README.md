@@ -6,7 +6,7 @@ jquery 数据表格
 
 ![](https://poppinrubo.github.io/jquery.dataTable/images/125202_2Po2_2939922.png)  
 
-`dataTable` [配置项](https://poppinrubo.github.io/jquery.dataTable/ "新页面查看配置项")
+`dataTable配置项` 
 <br>
 <br>
 <table>
