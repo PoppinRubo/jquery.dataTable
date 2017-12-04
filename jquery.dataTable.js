@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-/* dataTable 版本号1.2.7 */
+/* dataTable 版本号1.2.8 */
 ///////////////////////////////////////
 
 /*选择行对象 对于复选框 外部可访问*/
@@ -31,7 +31,7 @@ var GetJSONData = {};
         function CreateTable(Object, Table, TableID, page) {
             if (empty(TableSet[TableID])) {
                 /*table 设置储存 写入记录*/
-                TableSet[TableID] = {Object: Object, Table: Table};
+                TableSet[TableID] = { Object: Object, Table: Table };
             }
             /*启用历史，设置更新url*/
             TableSet[TableID].Object.url = Object.url;
@@ -409,20 +409,20 @@ var GetJSONData = {};
                 /*页码按钮控制-禁用-启用*/
                 function pagControl(p) {
                     if (p > 1) {
-                        aPage.css({"cursor": "pointer"});
-                        firstPage.css({"cursor": "pointer"});
+                        aPage.css({ "cursor": "pointer" });
+                        firstPage.css({ "cursor": "pointer" });
                     }
                     if (p == 1) {
-                        aPage.css({"cursor": "not-allowed"});
-                        firstPage.css({"cursor": "not-allowed"});
+                        aPage.css({ "cursor": "not-allowed" });
+                        firstPage.css({ "cursor": "not-allowed" });
                     }
                     if (p < totalPage) {
-                        nextPage.css({"cursor": "pointer"});
-                        endPage.css({"cursor": "pointer"});
+                        nextPage.css({ "cursor": "pointer" });
+                        endPage.css({ "cursor": "pointer" });
                     }
                     if (p == totalPage) {
-                        nextPage.css({"cursor": "not-allowed"});
-                        endPage.css({"cursor": "not-allowed"});
+                        nextPage.css({ "cursor": "not-allowed" });
+                        endPage.css({ "cursor": "not-allowed" });
                     }
                 }
 
@@ -641,16 +641,16 @@ var GetJSONData = {};
             if (tableWidth - tdLeft - imgBoxWidth < 0) {/*计算左右距离调整显示位置*/
                 marginLeft = -eval(imgBoxWidth + 20);
             }
-            imgBox.css({"margin": marginTop + "px 0 0 " + marginLeft + "px", "display": "block"});
+            imgBox.css({ "margin": marginTop + "px 0 0 " + marginLeft + "px", "display": "block" });
             window.console.log(tableWidth - tdLeft - imgBoxWidth);
         }, function () {
-            $(this).next().css({"display": "none"});
+            $(this).next().css({ "display": "none" });
         });
     }
 
     /**下面是辅助方法**/
     function empty(b) {/*检查是否设置 不存在返回true 为空为true*/
-        return typeof(b) == "undefined";
+        return typeof (b) == "undefined";
     }
 
     /*后台错误提示*/
@@ -678,7 +678,7 @@ var GetJSONData = {};
         for (var i = 0; i < row.length; i++) {
             num = row.eq(i + 1).attr(("data-row"));
             if (num % 2 == 0) {
-                row.eq(i + 1).css({"background-color": "#f2f2f2"});
+                row.eq(i + 1).css({ "background-color": "#f2f2f2" });
             }
         }
 
@@ -744,10 +744,10 @@ var GetJSONData = {};
             table.append(loading);
             var dt_animation = $(".dt_animation");
             startAnimation = function () {
-                dt_animation.animate({left: 10}, "slow");
-                dt_animation.animate({left: 30}, "slow");
-                dt_animation.animate({left: 10}, "slow");
-                dt_animation.animate({left: 0}, "slow", startAnimation);
+                dt_animation.animate({ left: 10 }, "slow");
+                dt_animation.animate({ left: 30 }, "slow");
+                dt_animation.animate({ left: 10 }, "slow");
+                dt_animation.animate({ left: 0 }, "slow", startAnimation);
             };
             /*启动动画*/
             startAnimation();
@@ -845,7 +845,7 @@ var GetJSONData = {};
             error: function (msg) {
                 /*结束加载动画*/
                 Animation(TableID, 'stop');
-                status(msg);
+                status(TableID, msg);
             }
         });
     }
