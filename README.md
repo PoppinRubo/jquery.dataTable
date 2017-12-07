@@ -213,8 +213,7 @@ jquery 数据表格
   ]
 }
 ```
-后台需配合插件做分页设置，插件默认使用GET方式(可以设置为POST)发送为pager的json字符串对象,后台需要解析该字符串为对象。
-</br>该对象属性为 page : 页码,pageCapacity : 页码容量(页显示条数)
+后台需配合插件做分页设置，插件默认使用GET方式(可以设置为POST)发送page(页码)和pageCapacity(页码容量，一页显示的条数),后台需要收到这两个参数处理分页。
 
 参照PHP版本可解析到对象,并处理输出
 
@@ -222,8 +221,8 @@ jquery 数据表格
 
 <?php
     $pager = json_decode($_GET["pager"]);
-    $page=$pager->page;
-    $Capacity = $pager->pageCapacity;
+    $page=$_GET['page'];
+    $Capacity = $_GET['pageCapacity'];
     $List = $DB->order('id desc')->limit($page, $Capacity)->select('video');
     $total = $DB->count('video');
     $rows = array();
@@ -236,36 +235,6 @@ jquery 数据表格
     $data = array('total' => $total, 'rows' => $rows);
 echo json_encode($data);
 ?>
-```
-Java版本(mysql)
-<br>
-<br>
-``` java
-
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		JdbcHelper db = new JdbcHelper();
-		//get获取json字符串对象
-		String  pager= request.getParameter("pager");
-		//字符串转换为对象
-		JSONObject jsonObject = JSONObject.fromObject(pager);
-		//提取参数
-		int page=jsonObject.getInt("page");
-		int pageCapacity=jsonObject.getInt("pageCapacity");
-		//简单处理分页
-		int p=(page-1)*pageCapacity;
-		String sql="select * from video order by id desc limit "+p+","+pageCapacity+"";	
-		JSONArray jsonArray = JSONArray.fromObject(db.query(sql,null, null));//list转换json字符串
-		String sqlcount="select * from video";
-		int total=db.queryCount(sqlcount,null, null);
-		String json="{"+"\"total\":"+total+",\"rows\":"+jsonArray+"}";//格式拼接
-		out.print(json);
-		out.flush();
-		out.close();
-	}
 ```
 以上示例仅供参考,不建议直接使用在项目。对于分页可自行封装
 <br>

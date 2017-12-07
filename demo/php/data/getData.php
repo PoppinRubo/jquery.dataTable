@@ -3,9 +3,8 @@ include_once('class/DB.php');
 function getVideoList()
 {/*拉取数据*/
     $DB = new DB();
-    $pager = json_decode($_GET["pager"]);
-    $page = $pager->page;
-    $Capacity = $pager->pageCapacity;
+    $page = $_POST["page"];
+    $Capacity = $_POST["pageCapacity"];
     $Query = null;
     if (isset($_GET["search"])) {
         $Query = $_GET["search"];
