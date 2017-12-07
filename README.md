@@ -11,7 +11,7 @@ jquery 数据表格
 <br>
 <table>
     <tr>
-        <td colspan="2">配置项</td>
+        <td colspan="2">配置项</td>
         <td>说明</td>
         <td>选项</td>
     </tr>
@@ -220,9 +220,8 @@ jquery 数据表格
 ``` php
 
 <?php
-    $pager = json_decode($_GET["pager"]);
-    $page=$_GET['page'];
-    $Capacity = $_GET['pageCapacity'];
+    $page = $_GET["page"];
+    $Capacity = $_GET["pageCapacity"];
     $List = $DB->order('id desc')->limit($page, $Capacity)->select('video');
     $total = $DB->count('video');
     $rows = array();
@@ -281,9 +280,8 @@ function getList()
 {/*拉取列表*/
     include_once('class/DB.php');
     $DB = new DB();
-    $pager = json_decode($_GET["pager"]);
-    $page = $pager->page;
-    $Capacity = $pager->pageCapacity;
+    $page = $_GET["page"];
+    $Capacity = $_GET["pageCapacity"];
     $Query = $_GET["search"];
     $List = $DB->order('AmountID asc')->limit($page, $Capacity)->select('statistics');/*常规查询*/
     $total = $DB->count('statistics');
