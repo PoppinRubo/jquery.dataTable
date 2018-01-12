@@ -666,7 +666,6 @@ var GetJSONData = {};
                 "margin": marginTop + "px 0 0 " + marginLeft + "px",
                 "display": "block"
             });
-            window.console.log(tableWidth - tdLeft - imgBoxWidth);
         }, function () {
             $(this).next().css({
                 "display": "none"
