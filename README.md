@@ -308,4 +308,4 @@ function getList()
 getList();
 ?>
 ```
-### [查看demo](http://www.showdoing.cn/dataTable/ "查看demo")
+### [查看demo](http://dataTable.showdoing.cn/ "查看demo")
